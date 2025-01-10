@@ -1,24 +1,5 @@
-title: L先生的博客
-description: "L先生的博客,一个有趣而精彩的地方。"
-url: "https://leliang-sjtu.github.io/" 
-baseurl: "."  
-theme: jekyll-theme-cayman  
-exclude:  
-  - "README.md"  
-  - "LICENSE"  
-plugins:  
-  - jekyll-seo-tag  
-  - jekyll-feed  
-author: "John Doe"  
-social_links:  
-  github: "https://github.com//LeLiang-SJTU"  
-google_analytics: UA-XXXXXXXX-X
-
-
-# 构建设置
-markdown: kramdown
-permalink: /:year/:month/:day/:title/
-
+title: My Blog
+description: A beautiful Jekyll blog
 
 # Navigation settings
 navigation:
