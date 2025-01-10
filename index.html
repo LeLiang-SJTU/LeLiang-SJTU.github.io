@@ -35,7 +35,7 @@
     }"
     x-init="setInterval(() => nextSlide(), 5000)">
         <!-- 导航栏 -->
-        {% include nav.html %}
+        {% include naver.html %}
 
         <!-- 侧边栏 -->
         <div class="fixed inset-y-0 left-0 transform transition-transform duration-300 z-30"
@@ -47,9 +47,7 @@
                         <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">技术分类</h3>
                         <div class="space-y-2">
                             {% for post in site.posts %}
-                                <li>
-                                    <a href="{{ post.url }}" class="block text-gray-700 hover:text-blue-600">{{ post.title | escape }}</a>
-                                </li>
+                              <a href="{{ post.url }}" class="block text-gray-700 hover:text-blue-600">{{ post.title | escape }}</a>
                             {% endfor %}
                    
                         </div>
