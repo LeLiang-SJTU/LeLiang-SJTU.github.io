@@ -1,7 +1,7 @@
 title: L先生的博客
 description: "L先生的博客,一个有趣而精彩的地方。"
 url: "https://leliang-sjtu.github.io/" 
-baseurl: "/jekyll-gitbook"  
+baseurl: "."  
 theme: jekyll-theme-cayman  
 exclude:  
   - "README.md"  
@@ -19,26 +19,42 @@ google_analytics: UA-XXXXXXXX-X
 markdown: kramdown
 permalink: /:year/:month/:day/:title/
 
-# 导航设置
+
+# Navigation settings
 navigation:
   - title: 首页
     url: /
+  - title: 技术
+    url: /tech
+  - title: 生活
+    url: /life
   - title: 关于
     url: /about
-  - title: 归档
-    url: /archive
 
-# 分类设置
+# Slider settings
+slides:
+  - title: 探索编程世界
+    desc: 分享技术见解与经验
+  - title: 生活随笔
+    desc: 记录精彩瞬间
+  - title: 学习心得
+    desc: 知识分享与成长
+
+# Category settings
 categories:
-  - name: 技术博客
+  - name: 技术分类
     items:
       - name: Web开发
-        posts: []
+        url: /categories/web
       - name: 人工智能
-        posts: []
+        url: /categories/ai
+      - name: 后端架构
+        url: /categories/backend
   - name: 生活随笔
     items:
       - name: 旅行日记
-        posts: []
+        url: /categories/travel
       - name: 读书笔记
-        posts: []
+        url: /categories/reading
+      - name: 生活感悟
+        url: /categories/life
