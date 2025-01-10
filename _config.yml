@@ -9,6 +9,8 @@ navigation:
     url: /tech
   - title: 生活
     url: /life
+  - title: 其他
+    url: /life
   - title: 关于
     url: /about
 
