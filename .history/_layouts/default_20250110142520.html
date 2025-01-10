@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    {% include head.html %}
+</head>
+<body>
+    <div class="min-h-screen bg-gray-50">
+        {% include header.html %}
+        <div class="flex">
+            {% include sidebar.html %}
+            <main class="flex-1 transition-all duration-300">
+                {{ content }}
+            </main>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.3.0/alpine.js"></script>
+    <script src="{{ site.baseurl }}/assets/js/main.js"></script>
+</body>
+</html>
