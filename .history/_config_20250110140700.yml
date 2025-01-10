@@ -13,18 +13,3 @@ author: "John Doe"
 social_links:  
   github: "https://github.com//LeLiang-SJTU"  
 google_analytics: UA-XXXXXXXX-X
-
-
-navigation:
-  - title: 首页
-    url: /
-  - title: 关于
-    url: /about
-  - title: 归档
-    url: /archive
-  - title: 分类
-    url: /categories
-
-collections:
-  categories:
-    output: true
