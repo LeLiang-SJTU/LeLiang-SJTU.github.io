@@ -139,6 +139,15 @@
                 </div>
             </div>
         </main>
+
+        <section>
+
+            {{ content }}
+      
+        </section>
     </div>
+    <footer>
+        <p>{{ site.copyright | default: "copyright not found in _config.yml" }}</p>
+    </footer>
 </body>
 </html>
