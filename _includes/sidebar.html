@@ -6,9 +6,9 @@
         <div class="mb-8">
             <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">技术分类</h3>
             <div class="space-y-2">
-                <a href="#" class="block text-gray-700 hover:text-blue-600">Web开发</a>
-                <a href="#" class="block text-gray-700 hover:text-blue-600">人工智能</a>
-                <a href="#" class="block text-gray-700 hover:text-blue-600">后端架构</a>
+                {% for post in site.posts %}
+                    <a href="{{ post.url }}" class="block text-gray-700 hover:text-blue-600">{{ post.title | escape }}</a>
+                {% endfor %}
             </div>
         </div>
         <div>

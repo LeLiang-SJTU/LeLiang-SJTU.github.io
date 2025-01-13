@@ -15,34 +15,11 @@
 
         测试一下啊
         <!-- 导航栏 -->
-        {% include naver.html %}
+        {% include navigation.html %}
 
         <!-- 侧边栏 -->
-        <div class="fixed inset-y-0 left-0 transform transition-transform duration-300 z-30"
-             :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }">
-            <div class="w-64 h-full bg-white shadow-lg pt-20">
-                <div class="px-4 py-2">
-                    <div class="mb-8">
+        {% include  sidebar.html %}
 
-                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">技术分类</h3>
-                        <div class="space-y-2">
-                            {% for post in site.posts %}
-                              <a href="{{ post.url }}" class="block text-gray-700 hover:text-blue-600">{{ post.title | escape }}</a>
-                            {% endfor %}
-                   
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">生活随笔</h3>
-                        <div class="space-y-2">
-                            <a href="#" class="block text-gray-700 hover:text-blue-600">旅行日记</a>
-                            <a href="#" class="block text-gray-700 hover:text-blue-600">读书笔记</a>
-                            <a href="#" class="block text-gray-700 hover:text-blue-600">生活感悟</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- 主要内容 -->
         <main class="transition-all duration-300" 
