@@ -1,15 +1,168 @@
----
-layout: home
-title: Blog
----
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.3.0/alpine.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div x-data="{ 
+        isNavOpen: true,
+        isSidebarOpen: true,
+        currentSlide: 0,
+        slides: [
+            { 
+                title: '探索编程世界', 
+                desc: '分享技术见解与经验',
+                bg: 'bg-gradient-to-r from-blue-600 to-purple-600'
+            },
+            { 
+                title: '生活随笔', 
+                desc: '记录精彩瞬间',
+                bg: 'bg-gradient-to-r from-green-600 to-blue-600'
+            },
+            { 
+                title: '学习心得', 
+                desc: '知识分享与成长',
+                bg: 'bg-gradient-to-r from-purple-600 to-pink-600'
+            }
+        ],
+        nextSlide() {
+            this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+        }
+    }"
+    x-init="setInterval(() => nextSlide(), 5000)">
+        <!-- 导航栏 -->
+        <nav class="fixed w-full bg-white shadow-lg transition-all duration-300 z-50">
+            <div class="container mx-auto px-6">
+                <div class="flex justify-between items-center h-16">
+                    <div class="flex items-center space-x-8">
+                        <button @click="isSidebarOpen = !isSidebarOpen" 
+                                class="text-gray-600 hover:text-gray-900">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                        </button>
+                        <span class="text-2xl font-bold text-gray-800">MyBlog</span>
+                    </div>
+                    <div class="hidden md:flex space-x-8">
 
-<h1>Latest Posts</h1>
+                        {% for item in site.navigation %}
+                        <a href="{{ item.url}}" class="text-gray-600 hover:text-gray-900 font-medium" {% if page.url == item.link %} style="color: red;" {% endif %}>   {{ item.title }}</a> 
+                        {% endfor %}
 
-<ul>
-  {% for post in site.posts %}
-    <li>
-      <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-      <p>{{ post.excerpt }}</p>
-    </li>
-  {% endfor %}
-</ul>
+                        <a href="#" class="text-gray-600 hover:text-gray-900 font-medium">关于</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 侧边栏 -->
+        <div class="fixed inset-y-0 left-0 transform transition-transform duration-300 z-30"
+             :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }">
+            <div class="w-64 h-full bg-white shadow-lg pt-20">
+                <div class="px-4 py-2">
+                    <div class="mb-8">
+                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">我的笔记📒</h3>
+                        <div class="space-y-2">
+                            {% for post in site.posts %}
+                                <a href="{{ post.url }}" class="block text-gray-700 hover:text-blue-600">{{ post.title | escape }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">生活随笔</h3>
+                        <div class="space-y-2">
+                            <a href="#" class="block text-gray-700 hover:text-blue-600">旅行日记</a>
+                            <a href="#" class="block text-gray-700 hover:text-blue-600">读书笔记</a>
+                            <a href="#" class="block text-gray-700 hover:text-blue-600">生活感悟</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主要内容 -->
+        <main class="transition-all duration-300" 
+              :class="{ 'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen }">
+            <div class="pt-16">
+                <!-- 轮播图 -->
+                <div class="relative h-96 bg-gray-900">
+                    <template x-for="(slide, index) in slides" :key="index">
+                        <div class="absolute inset-0 transition-opacity duration-500"
+                             :class="{ 'opacity-100': currentSlide === index, 'opacity-0': currentSlide !== index }">
+                            <div class="absolute inset-0" :class="slide.bg" style="opacity: 0.9"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-center">
+                                <div class="max-w-2xl px-4">
+                                    <h2 class="text-4xl font-bold text-white mb-4" x-text="slide.title"></h2>
+                                    <p class="text-xl text-gray-200" x-text="slide.desc"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- 最新文章 -->
+                <div class="container mx-auto px-6 py-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-8">最新文章</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- 文章卡片 1 -->
+                        <article class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:-translate-y-1">
+                            <div class="h-48 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                            <div class="p-6">
+                                <div class="text-sm text-blue-600 mb-2">Web开发</div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-3">
+                                    现代前端开发的趋势与挑战
+                                </h3>
+                                <p class="text-gray-600 mb-4">探讨当前前端开发领域的最新趋势，以及开发者面临的主要挑战与解决方案...</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-500">2024-01-10</span>
+                                    <a href="#" class="text-blue-600 hover:text-blue-800">阅读更多</a>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- 文章卡片 2 -->
+                        <article class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:-translate-y-1">
+                            <div class="h-48 bg-gradient-to-r from-green-500 to-blue-500"></div>
+                            <div class="p-6">
+                                <div class="text-sm text-green-600 mb-2">人工智能</div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-3">
+                                    深度学习在图像识别中的应用
+                                </h3>
+                                <p class="text-gray-600 mb-4">深入探讨深度学习技术如何改变图像识别领域，以及其在实际应用中的表现...</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-500">2024-01-09</span>
+                                    <a href="#" class="text-green-600 hover:text-green-800">阅读更多</a>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- 文章卡片 3 -->
+                        <article class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:-translate-y-1">
+                            <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                            <div class="p-6">
+                                <div class="text-sm text-purple-600 mb-2">读书笔记</div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-3">
+                                    《架构整洁之道》读后感
+                                </h3>
+                                <p class="text-gray-600 mb-4">分享阅读《架构整洁之道》的心得体会，以及如何将书中的理念应用到实际工作中...</p>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-500">2024-01-08</span>
+                                    <a href="#" class="text-purple-600 hover:text-purple-800">阅读更多</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <div>
+                    {{content}}
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
