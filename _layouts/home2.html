@@ -1,39 +1,6 @@
-<!DOCTYPE html>
-<html lang="zh">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Blog</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.3.0/alpine.js" defer></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-</head>
+{% include head.html %}
 <body class="bg-gray-50">
-    <div x-data="{ 
-        isNavOpen: true,
-        isSidebarOpen: true,
-        currentSlide: 0,
-        slides: [
-            { 
-                title: '探索编程世界', 
-                desc: '分享技术见解与经验',
-                bg: 'bg-gradient-to-r from-blue-600 to-purple-600'
-            },
-            { 
-                title: '生活随笔', 
-                desc: '记录精彩瞬间',
-                bg: 'bg-gradient-to-r from-green-600 to-blue-600'
-            },
-            { 
-                title: '学习心得', 
-                desc: '知识分享与成长',
-                bg: 'bg-gradient-to-r from-purple-600 to-pink-600'
-            }
-        ],
-        nextSlide() {
-            this.currentSlide = (this.currentSlide + 1) % this.slides.length;
-        }
-    }"
-    x-init="setInterval(() => nextSlide(), 5000)">
+    <div >
         <!-- 导航栏 -->
         <nav class="fixed w-full bg-white shadow-lg transition-all duration-300 z-50">
             <div class="container mx-auto px-6">
