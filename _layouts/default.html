@@ -1,32 +1,7 @@
 <!-- _layouts/default.html -->
 
 <body class="bg-gray-50">
-    <div x-data="{ 
-        isNavOpen: true,
-        isSidebarOpen: true,
-        currentSlide: 0,
-        slides: [
-            { 
-                title: '{{ site.slides[0].title }}', 
-                desc: '{{ site.slides[0].desc }}',
-                bg: 'bg-gradient-to-r from-blue-600 to-purple-600'
-            },
-            { 
-                title: '{{ site.slides[1].title }}', 
-                desc: '{{ site.slides[1].desc }}',
-                bg: 'bg-gradient-to-r from-green-600 to-blue-600'
-            },
-            { 
-                title: '{{ site.slides[2].title }}', 
-                desc: '{{ site.slides[2].desc }}',
-                bg: 'bg-gradient-to-r from-purple-600 to-pink-600'
-            }
-        ],
-        nextSlide() {
-            this.currentSlide = (this.currentSlide + 1) % this.slides.length;
-        }
-    }"
-    x-init="setInterval(() => nextSlide(), 5000)">
+    <div >
         {% include header.html %}
         {% include sidebar.html %}
         <main class="transition-all duration-300" 
