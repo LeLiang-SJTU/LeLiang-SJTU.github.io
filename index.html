@@ -1,0 +1,19 @@
+---
+layout: default
+---
+
+<div class="container mx-auto px-4">
+  {% include carousel.html %}
+  <div class="flex">
+    <div class="w-3/4">
+      {% for category in site.categories %}
+        <h2>{{ category | first }}</h2>
+        {% assign first_post = category | last | first %}
+        {% include article_summary.html post=first_post %}
+      {% endfor %}
+    </div>
+    <div class="w-1/4">
+      {% include sidebar.html %}
+    </div>
+  </div>
+</div>

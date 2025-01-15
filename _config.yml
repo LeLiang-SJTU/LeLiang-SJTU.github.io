@@ -1,0 +1,7 @@
+title: My GitHub Pages Blog
+description: A simple blog template using Jekyll and Tailwind CSS
+theme: null
+plugins:
+  - jekyll-feed
+  - jekyll-paginate
+paginate: 5

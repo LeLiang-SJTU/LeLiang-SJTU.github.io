@@ -1,0 +1,8 @@
+<div class="bg-gray-200 p-4">
+  <h3 class="font-bold mb-2">Blog Folders</h3>
+  <ul>
+    {% for category in site.categories %}
+      <li class="mb-1"><a href="#{{ category | first }}" class="text-blue-500 hover:text-blue-700">{{ category | first }}</a></li>
+    {% endfor %}
+  </ul>
+</div>
