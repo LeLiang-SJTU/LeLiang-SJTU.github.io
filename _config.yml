@@ -1,43 +1,91 @@
+# _config.yml
 title: My Blog
-description: A beautiful Jekyll blog
+description: A Jekyll blog with Tailwind CSS
+baseurl: ""
+url: ""
 
-# Navigation settings
-navigation:
-  - title: 首页
-    url: /
-  - title: 技术
-    url: /tech
-  - title: 生活
-    url: /life
-  - title: 其他
-    url: /life
-  - title: 关于
-    url: /about
+# Build settings
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  
+collections:
+  categories:
+    output: true
+    permalink: /category/:name/
 
-# Slider settings
-slides:
-  - title: 探索编程世界
-    desc: 分享技术见解与经验
-  - title: 生活随笔
-    desc: 记录精彩瞬间
-  - title: 学习心得
-    desc: 知识分享与成长
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      
+# Exclude from processing
+exclude:
+  - package.json
+  - package-lock.json
+  - node_modules
+  - README.md
+  - postcss.config.js
+  - tailwind.config.js
 
-# Category settings
-categories:
-  - name: 技术分类
-    items:
-      - name: Web开发
-        url: /categories/web
-      - name: 人工智能
-        url: /categories/ai
-      - name: 后端架构
-        url: /categories/backend
-  - name: 生活随笔
-    items:
-      - name: 旅行日记
-        url: /categories/travel
-      - name: 读书笔记
-        url: /categories/reading
-      - name: 生活感悟
-        url: /categories/life
+# 自定义设置
+posts_per_carousel: 5
+
+---
+# _data/navigation.yml
+- title: 首页
+  url: /
+- title: 分类
+  url: /categories
+- title: 关于
+  url: /about
+
+---
+# Gemfile
+source "https://rubygems.org"
+
+gem "jekyll"
+gem "jekyll-feed"
+gem "jekyll-seo-tag"
+gem "webrick"
+
+---
+# package.json
+{
+  "scripts": {
+    "build": "postcss assets/css/main.css -o assets/css/style.css"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.21",
+    "postcss-cli": "^10.1.0",
+    "tailwindcss": "^3.2.7"
+  }
+}
+
+---
+# postcss.config.js
+module.exports = {
+  plugins: {
+    tailwindcss: {},
+    autoprefixer: {}
+  }
+}
+
+---
+# tailwind.config.js
+module.exports = {
+  content: [
+    './_includes/**/*.html',
+    './_layouts/**/*.html',
+    './_posts/**/*.{html,md}',
+    './*.html'
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}

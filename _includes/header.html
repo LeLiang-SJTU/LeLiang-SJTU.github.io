@@ -1,0 +1,13 @@
+<!-- _includes/header.html -->
+<header class="bg-white shadow-sm">
+    <nav class="container mx-auto px-4 py-4">
+        <ul class="flex space-x-6">
+            {% for item in site.navigation %}
+            <li>
+                <a href="{{ item.url | relative_url }}" 
+                   class="text-gray-600 hover:text-gray-900">{{ item.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</header>

@@ -1,39 +1,20 @@
 <!-- _layouts/default.html -->
-
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }} - {{ site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.5/cdn.min.js" defer></script>
+</head>
 <body class="bg-gray-50">
-    <div x-data="{ 
-        isNavOpen: true,
-        isSidebarOpen: true,
-        currentSlide: 0,
-        slides: [
-            { 
-                title: '{{ site.slides[0].title }}', 
-                desc: '{{ site.slides[0].desc }}',
-                bg: 'bg-gradient-to-r from-blue-600 to-purple-600'
-            },
-            { 
-                title: '{{ site.slides[1].title }}', 
-                desc: '{{ site.slides[1].desc }}',
-                bg: 'bg-gradient-to-r from-green-600 to-blue-600'
-            },
-            { 
-                title: '{{ site.slides[2].title }}', 
-                desc: '{{ site.slides[2].desc }}',
-                bg: 'bg-gradient-to-r from-purple-600 to-pink-600'
-            }
-        ],
-        nextSlide() {
-            this.currentSlide = (this.currentSlide + 1) % this.slides.length;
-        }
-    }"
-    x-init="setInterval(() => nextSlide(), 5000)">
-        {% include header.html %}
+    {% include header.html %}
+    <div class="container mx-auto px-4 flex">
         {% include sidebar.html %}
-        <main class="transition-all duration-300" 
-              :class="{ 'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen }">
-            <div class="pt-16">
-                {{ content }}
-            </div>
+        <main class="flex-1 min-h-screen p-4">
+            {{ content }}
         </main>
     </div>
 </body>
