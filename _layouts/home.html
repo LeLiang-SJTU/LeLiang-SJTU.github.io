@@ -17,27 +17,25 @@
             <div class="pt-16">
                 <!-- 轮播图 -->
                 <div class="relative h-96 bg-gray-900">
-                    {% assign latest_posts = site.posts | sort: 'date' | reverse | slice: 0, 5 %}
-                    <template x-for="(post, index) in {{ latest_posts | jsonify }}" :key="index">
+                    <template x-for="(slide, index) in slides" :key="index">
                         <div class="absolute inset-0 transition-opacity duration-500"
                              :class="{ 'opacity-100': currentSlide === index, 'opacity-0': currentSlide !== index }">
-                            <div class="absolute inset-0" 
-                                 :style="{ 'background-image': post.image ? 'url(' + post.image + ')' : 'linear-gradient(to right, #4a5568, #2d3748)' }" 
-                                 style="opacity: 0.9"></div>
+                            <div class="absolute inset-0" :class="slide.bg" style="opacity: 0.9"></div>
                             <div class="absolute inset-0 flex items-center justify-center text-center">
                                 <div class="max-w-2xl px-4">
-                                    <h2 class="text-4xl font-bold text-white mb-4" x-text="post.title"></h2>
-                                    <p class="text-xl text-gray-200" x-text="post.excerpt"></p>
-                                    <div class="text-sm text-gray-400" x-text="post.category"></div>
+                                    <h2 class="text-4xl font-bold text-white mb-4" x-text="slide.title"></h2>
+                                    <p class="text-xl text-gray-200" x-text="slide.desc"></p>
                                 </div>
                             </div>
                         </div>
                     </template>
                 </div>
+                {% assign latest_posts = site.posts | sort: 'date' | reverse | slice: 0, 5 %}
+                
 
                 <!-- 最新文章 -->
                 <div class="container mx-auto px-6 py-12">
-                    <h2 class="text-3xl font-bold text-gray-800 mb-8">最新文章</h2>
+                    <h2 class="text-3xl font-bold text-gray-800 mb-8">{{latest_posts}}</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         <!-- 文章卡片 1 -->
                         <article class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:-translate-y-1">
