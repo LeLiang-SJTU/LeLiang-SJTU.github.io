@@ -1,7 +1,7 @@
 {% include head.html %}
-
 <body class="bg-gray-50">
-    <div x-init="setInterval(() => nextSlide(), 5000)">
+    <div >
+     
 
         <!-- 导航栏 -->
         {% include navigation.html %}
@@ -11,54 +11,29 @@
 
 
 
-
         <!-- 主要内容 -->
         <main class="transition-all duration-300" 
               :class="{ 'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen }">
             <div class="pt-16">
                 <!-- 轮播图 -->
-                <div id="carousel" class="relative" data-carousel="static">
-                    <!-- Carousel wrapper -->
-                    <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-                      {% for post in recent_posts %}
-                      <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <div class="flex items-center justify-center h-full bg-center bg-cover {% if post.image %}bg-[url('{{ post.image }}')]{% else %}bg-gray-200{% endif %}">
-                          <div class="bg-white bg-opacity-75 p-4 rounded">
-                            <h3 class="text-xl font-bold"><a href="{{ post.url }}">{{ post.title }}</a></h3>
-                            <p class="text-sm text-gray-600">{{ post.date | date: "%Y-%m-%d" }}</p>
-                            <p class="mt-2">{{ post.excerpt }}</p>
-                            {% if post.categories %}
-                              <div class="mt-4">
-                                <span class="text-xs text-gray-500">分类:</span>
-                                {% for category in post.categories %}
-                                  <a href="{{ site.baseurl }}/categories/{{ category | downcase }}" class="text-xs text-gray-600 hover:text-gray-800">{{ category }}</a>
-                                {% endfor %}
-                              </div>
-                            {% endif %}
-                          </div>
+                <div class="relative h-96 bg-gray-900">
+                    {% assign latest_posts = site.posts | sort: 'date' | reverse | slice: 0, 5 %}
+                    <template x-for="(post, index) in {{ latest_posts | jsonify }}" :key="index">
+                        <div class="absolute inset-0 transition-opacity duration-500"
+                             :class="{ 'opacity-100': currentSlide === index, 'opacity-0': currentSlide !== index }">
+                            <div class="absolute inset-0" 
+                                 :style="{ 'background-image': post.image ? 'url(' + post.image + ')' : 'linear-gradient(to right, #4a5568, #2d3748)' }" 
+                                 style="opacity: 0.9"></div>
+                            <div class="absolute inset-0 flex items-center justify-center text-center">
+                                <div class="max-w-2xl px-4">
+                                    <h2 class="text-4xl font-bold text-white mb-4" x-text="post.title"></h2>
+                                    <p class="text-xl text-gray-200" x-text="post.excerpt"></p>
+                                    <div class="text-sm text-gray-400" x-text="post.category"></div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
-                      {% endfor %}
-                    </div>
-                    <!-- Slider controls -->
-                    <button type="button" class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-                      <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 group-focus:ring-4 group-focus:ring-white group-focus:outline-none">
-                        <svg aria-hidden="true" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                        <span class="sr-only">Previous</span>
-                      </span>
-                    </button>
-                    <button type="button" class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-                      <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 group-focus:ring-4 group-focus:ring-white group-focus:outline-none">
-                        <svg aria-hidden="true" class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                        <span class="sr-only">Next</span>
-                      </span>
-                    </button>
-                  </div>
-                  
+                    </template>
+                </div>
 
                 <!-- 最新文章 -->
                 <div class="container mx-auto px-6 py-12">
@@ -112,10 +87,6 @@
                             </div>
                         </article>
                     </div>
-                </div>
-
-                <div>
-                    {{content}}
                 </div>
             </div>
         </main>
