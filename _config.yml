@@ -9,7 +9,7 @@ markdown: kramdown
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
-  
+
 collections:
   categories:
     output: true
@@ -21,71 +21,6 @@ defaults:
       type: "posts"
     values:
       layout: "post"
-      
-# Exclude from processing
-exclude:
-  - package.json
-  - package-lock.json
-  - node_modules
-  - README.md
-  - postcss.config.js
-  - tailwind.config.js
 
 # 自定义设置
 posts_per_carousel: 5
-
----
-# _data/navigation.yml
-- title: 首页
-  url: /
-- title: 分类
-  url: /categories
-- title: 关于
-  url: /about
-
----
-# Gemfile
-source "https://rubygems.org"
-
-gem "jekyll"
-gem "jekyll-feed"
-gem "jekyll-seo-tag"
-gem "webrick"
-
----
-# package.json
-{
-  "scripts": {
-    "build": "postcss assets/css/main.css -o assets/css/style.css"
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.21",
-    "postcss-cli": "^10.1.0",
-    "tailwindcss": "^3.2.7"
-  }
-}
-
----
-# postcss.config.js
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {}
-  }
-}
-
----
-# tailwind.config.js
-module.exports = {
-  content: [
-    './_includes/**/*.html',
-    './_layouts/**/*.html',
-    './_posts/**/*.{html,md}',
-    './*.html'
-  ],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}

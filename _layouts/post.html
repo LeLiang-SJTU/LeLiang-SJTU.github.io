@@ -1,0 +1,10 @@
+---
+layout: default
+---
+<article class="bg-white rounded-lg shadow-md p-6">
+    <h1 class="text-3xl font-bold mb-4">{{ page.title }}</h1>
+    <div class="text-gray-500 mb-6">{{ page.date | date: "%Y-%m-%d" }}</div>
+    <div class="prose max-w-none">
+        {{ content }}
+    </div>
+</article>
