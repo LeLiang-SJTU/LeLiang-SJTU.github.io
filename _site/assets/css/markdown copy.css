@@ -1,0 +1,194 @@
+/* 整体容器样式 */
+.markdown-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    line-height: 1.6;
+    color: #24292e;
+}
+
+/* 标题样式 */
+.markdown-content h1 {
+    font-size: 2.5rem;
+    margin: 2rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #eaecef;
+    color: #1a237e;
+}
+
+.markdown-content h2 {
+    font-size: 2rem;
+    margin: 1.8rem 0;
+    padding-bottom: 0.3rem;
+    color: #1565c0;
+}
+
+.markdown-content h3 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0;
+    color: #1976d2;
+}
+
+.markdown-content h4 {
+    font-size: 1.25rem;
+    margin: 1.2rem 0;
+    color: #2196f3;
+}
+
+/* 段落样式 */
+.markdown-content p {
+    margin: 1rem 0;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* 列表样式 */
+.markdown-content ul, 
+.markdown-content ol {
+    padding-left: 2rem;
+    margin: 1rem 0;
+}
+
+.markdown-content li {
+    margin: 0.5rem 0;
+}
+
+/* 链接样式 */
+.markdown-content a {
+    color: #0366d6;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+.markdown-content a:hover {
+    border-bottom-color: #0366d6;
+}
+
+/* 引用块样式 */
+.markdown-content blockquote {
+    margin: 1rem 0;
+    padding: 0.5rem 1rem;
+    border-left: 4px solid #42a5f5;
+    background-color: #f8f9fa;
+    color: #444;
+}
+
+/* 代码块样式 */
+.markdown-content pre {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #282c34;
+    border-radius: 6px;
+    overflow-x: auto;
+}
+
+.markdown-content pre code {
+    color: #abb2bf;
+    font-family: 'Consolas', 'Monaco', 'Andale Mono', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* 行内代码样式 */
+.markdown-content :not(pre) > code {
+    padding: 0.2rem 0.4rem;
+    background-color: #f6f8fa;
+    border-radius: 3px;
+    font-family: 'Consolas', 'Monaco', 'Andale Mono', monospace;
+    font-size: 0.9rem;
+    color: #e53935;
+}
+
+/* 表格样式 */
+.markdown-content table {
+    width: 100%;
+    margin: 1rem 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.markdown-content th {
+    background-color: #f6f8fa;
+    border: 1px solid #dfe2e5;
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.markdown-content td {
+    border: 1px solid #dfe2e5;
+    padding: 0.75rem;
+}
+
+.markdown-content tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* 图片样式 */
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 水平分割线 */
+.markdown-content hr {
+    margin: 2rem 0;
+    border: 0;
+    border-top: 1px solid #eaecef;
+}
+
+/* 代码高亮 */
+.highlight .c { color: #6a737d; } /* Comment */
+.highlight .k { color: #d73a49; } /* Keyword */
+.highlight .s { color: #032f62; } /* String */
+.highlight .n { color: #6f42c1; } /* Name */
+.highlight .o { color: #005cc5; } /* Operator */
+.highlight .p { color: #24292e; } /* Punctuation */
+.highlight .m { color: #005cc5; } /* Number */
+.highlight .f { color: #6f42c1; } /* Function */
+.highlight .v { color: #e36209; } /* Variable */
+
+/* 暗色主题支持 */
+@media (prefers-color-scheme: dark) {
+    .markdown-content {
+        color: #c9d1d9;
+        background: #0d1117;
+    }
+
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3,
+    .markdown-content h4 {
+        color: #58a6ff;
+    }
+
+    .markdown-content a {
+        color: #58a6ff;
+    }
+
+    .markdown-content blockquote {
+        background-color: #161b22;
+        border-left-color: #58a6ff;
+    }
+
+    .markdown-content :not(pre) > code {
+        background-color: #161b22;
+        color: #ff7b72;
+    }
+
+    .markdown-content table th {
+        background-color: #161b22;
+        border-color: #30363d;
+    }
+
+    .markdown-content table td {
+        border-color: #30363d;
+    }
+
+    .markdown-content tr:nth-child(even) {
+        background-color: #161b22;
+    }
+}

@@ -1,0 +1,198 @@
+I"�<p>Markdown 是一种轻量级的标记语言，常用于格式化文本。它简单易学，广泛应用于文档编写、博客、论坛等场景。以下是 Markdown 的所有基本语法说明：</p>
+
+<hr />
+
+<h1 id="markdown-语法说明">Markdown 语法说明</h1>
+
+<h2 id="1-标题">1. 标题</h2>
+<p>使用 <code class="language-plaintext highlighter-rouge">#</code> 来表示标题，<code class="language-plaintext highlighter-rouge">#</code> 的数量表示标题的级别。</p>
+
+<h1 id="一级标题">一级标题</h1>
+<h2 id="二级标题">二级标题</h2>
+<h3 id="三级标题">三级标题</h3>
+<h4 id="四级标题">四级标题</h4>
+<h5 id="五级标题">五级标题</h5>
+<h6 id="六级标题">六级标题</h6>
+
+<hr />
+
+<h2 id="2-段落与换行">2. 段落与换行</h2>
+<p>段落之间用空行分隔，单个回车不会换行。如果需要强制换行，在行尾添加两个空格。</p>
+
+<p>这是第一段。</p>
+
+<p>这是第二段。
+强制换行<br />
+在这里换行。</p>
+
+<hr />
+
+<h2 id="3-加粗与斜体">3. 加粗与斜体</h2>
+<ul>
+  <li>使用 <code class="language-plaintext highlighter-rouge">*</code> 或 <code class="language-plaintext highlighter-rouge">_</code> 包裹文字实现<strong>斜体</strong>。</li>
+  <li>使用 <code class="language-plaintext highlighter-rouge">**</code> 或 <code class="language-plaintext highlighter-rouge">__</code> 包裹文字实现<strong>加粗</strong>。</li>
+  <li>使用 <code class="language-plaintext highlighter-rouge">***</code> 或 <code class="language-plaintext highlighter-rouge">___</code> 包裹文字实现<strong>加粗斜体</strong>。</li>
+</ul>
+
+<p><em>斜体</em>
+<em>斜体</em></p>
+
+<p><strong>加粗</strong>
+<strong>加粗</strong></p>
+
+<p><strong><em>加粗斜体</em></strong>
+<strong><em>加粗斜体</em></strong></p>
+
+<hr />
+
+<h2 id="4-删除线">4. 删除线</h2>
+<p>使用 <code class="language-plaintext highlighter-rouge">~~</code> 包裹文字实现删除线。</p>
+
+<p><del>这是一段删除的文字</del></p>
+
+<hr />
+
+<h2 id="5-引用">5. 引用</h2>
+<p>使用 <code class="language-plaintext highlighter-rouge">&gt;</code> 表示引用，可以嵌套多层。</p>
+
+<blockquote>
+  <p>这是一个引用。</p>
+
+  <blockquote>
+    <p>这是嵌套的引用。</p>
+  </blockquote>
+</blockquote>
+
+<hr />
+
+<h2 id="6-列表">6. 列表</h2>
+<h3 id="无序列表">无序列表</h3>
+<p>使用 <code class="language-plaintext highlighter-rouge">-</code>、<code class="language-plaintext highlighter-rouge">*</code> 或 <code class="language-plaintext highlighter-rouge">+</code> 创建无序列表。</p>
+
+<ul>
+  <li>第一项</li>
+  <li>第二项
+    <ul>
+      <li>子项</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="有序列表">有序列表</h3>
+<p>使用数字加 <code class="language-plaintext highlighter-rouge">.</code> 创建有序列表。</p>
+
+<ol>
+  <li>第一项</li>
+  <li>第二项
+    <ol>
+      <li>子项</li>
+    </ol>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="7-代码">7. 代码</h2>
+<h3 id="行内代码">行内代码</h3>
+<p>使用反引号 <code class="language-plaintext highlighter-rouge">`</code> 包裹代码。</p>
+
+<p>这是一个 <code class="language-plaintext highlighter-rouge">行内代码</code> 示例。</p>
+
+<h3 id="代码块">代码块</h3>
+<p>使用三个反引号 ``` 包裹代码块，并可以指定语言以启用语法高亮。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sh">"</span><span class="s">Hello, World you!</span><span class="sh">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="8-链接">8. 链接</h2>
+<h3 id="内联链接">内联链接</h3>
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nv">链接文字</span><span class="p">](</span><span class="sx">URL</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="带标题的链接">带标题的链接</h3>
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nv">链接文字</span><span class="p">](</span><span class="sx">URL</span> <span class="nn">"标题"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="参考式链接">参考式链接</h3>
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nv">链接文字</span><span class="p">][</span><span class="ss">id</span><span class="p">]</span>
+
+<span class="p">[</span><span class="ss">id</span><span class="p">]:</span> <span class="sx">URL</span> <span class="nn">"可选标题"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="9-图片">9. 图片</h2>
+<h3 id="内联图片">内联图片</h3>
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">![</span><span class="nv">替代文字</span><span class="p">](</span><span class="sx">图片URL</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="带标题的图片">带标题的图片</h3>
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">![</span><span class="nv">替代文字</span><span class="p">](</span><span class="sx">图片URL</span> <span class="nn">"标题"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="10-分隔线">10. 分隔线</h2>
+<p>使用 <code class="language-plaintext highlighter-rouge">---</code>、<code class="language-plaintext highlighter-rouge">***</code> 或 <code class="language-plaintext highlighter-rouge">___</code> 创建分隔线。</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">---</span>
+<span class="p">***</span>
+<span class="ge">__</span>_
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="11-表格">11. 表格</h2>
+<p>使用 <code class="language-plaintext highlighter-rouge">|</code> 和 <code class="language-plaintext highlighter-rouge">-</code> 创建表格，列对齐方式通过 <code class="language-plaintext highlighter-rouge">-:</code>（右对齐）、<code class="language-plaintext highlighter-rouge">:-</code>（左对齐）或 <code class="language-plaintext highlighter-rouge">:-:</code>（居中对齐）控制。</p>
+
+<div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code>| 左对齐 | 居中对齐 | 右对齐 |
+| :----- | :------: | -----: |
+| A      |    B     |      C |
+| D      |    E     |      F |
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">左对齐</th>
+      <th style="text-align: center">居中对齐</th>
+      <th style="text-align: right">右对齐</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">A</td>
+      <td style="text-align: center">B</td>
+      <td style="text-align: right">C</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">D</td>
+      <td style="text-align: center">E</td>
+      <td style="text-align: right">F</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="12-转义字符">12. 转义字符</h2>
+<p>使用反斜杠 <code class="language-plaintext highlighter-rouge">\</code> 转义特殊字符。</p>
+
+<p>* 这不是斜体 *</p>
+
+<hr />
+
+<h2 id="13-html-标签">13. HTML 标签</h2>
+<p>Markdown 支持直接嵌入 HTML 标签。</p>
+
+<div style="color: red;">
+  <p>这是一个红色的文字&lt;/div&gt;</p>
+
+  <hr />
+
+  <p>以上就是 Markdown 的基本语法总结！希望对你有所帮助！</p>
+</div>
+:ET

@@ -1,5 +1,18 @@
-title: My Blog
-description: A beautiful Jekyll blog
+title: "L先生的博客"
+description: "L先生的博客,一个有趣而精彩的地方。"
+url: "https://leliang-sjtu.github.io/" 
+author: "John Doe"  
+social_links:  
+  github: "https://github.com//LeLiang-SJTU"  
+#theme: minima
+#使用集合
+collections:
+
+  books:
+    output: true  # 是否生成独立页面
+    permalink: /books/:path/  # 自定义 URL 结构
+  projects:
+    output: false # 仅作为数据，不生成页面
 
 # Navigation settings
 navigation:
@@ -14,30 +27,13 @@ navigation:
   - title: 关于
     url: /about
 
-# Slider settings
-slides:
-  - title: 探索编程世界
-    desc: 分享技术见解与经验
-  - title: 生活随笔
-    desc: 记录精彩瞬间
-  - title: 学习心得
-    desc: 知识分享与成长
-
-# Category settings
-categories:
-  - name: 技术分类
-    items:
-      - name: Web开发
-        url: /categories/web
-      - name: 人工智能
-        url: /categories/ai
-      - name: 后端架构
-        url: /categories/backend
-  - name: 生活随笔
-    items:
-      - name: 旅行日记
-        url: /categories/travel
-      - name: 读书笔记
-        url: /categories/reading
-      - name: 生活感悟
-        url: /categories/life
+markdown: kramdown
+kramdown:
+  input: GFM                # 使用 GitHub Flavored Markdown 语法
+  syntax_highlighter: rouge  # 使用 rouge 代码高亮
+  hard_wrap: false          # 禁止自动换行（保持原格式）
+  # 添加以下配置强制启用表格和代码块支持
+  parse_block_html: true
+  parse_span_html: true
+  auto_ids: true
+  enable_coderay: false     # 如果使用 rouge，需关闭 coderay

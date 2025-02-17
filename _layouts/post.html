@@ -1,10 +1,74 @@
 ---
 layout: default
 ---
+
+
+ <!-- 主题切换按钮和菜单 -->
+ <div class="theme-switcher">
+    <button class="theme-button" onclick="toggleThemeMenu()">🎨</button>
+    <div class="theme-menu" id="themeMenu">
+        <div class="theme-option" onclick="changeTheme('github')">GitHub主题</div>
+        <div class="theme-option" onclick="changeTheme('dark')">暗色主题</div>
+        <div class="theme-option" onclick="changeTheme('green')">护眼主题</div>
+        <div class="theme-option" onclick="changeTheme('typora')">typora主题</div>
+        <div class="theme-option" onclick="changeTheme('gallery')">美化主题</div>
+    </div>
+</div>
+
 <article class="bg-white rounded-lg shadow-md p-6">
     <h1 class="text-3xl font-bold mb-4">{{ page.title }}</h1>
     <div class="text-gray-500 mb-6">{{ page.date | date: "%Y-%m-%d" }}</div>
-    <div class="prose max-w-none">
+
+    <!-- Markdown 内容容器 -->
+
+
+    <div class="markdown-theme-github">
         {{ content }}
     </div>
 </article>
+
+
+<script>
+    // 主题切换功能
+    function changeTheme(theme) {
+        const container = document.querySelector('[class^="markdown-theme"]');
+        container.className = `markdown-theme-${theme}`;
+        // 保存主题选择到 localStorage
+        localStorage.setItem('preferred-theme', theme);
+        // 关闭主题菜单
+        toggleThemeMenu();
+    }
+
+    // 切换主题菜单显示/隐藏
+    function toggleThemeMenu() {
+        const menu = document.getElementById('themeMenu');
+        menu.classList.toggle('active');
+    }
+
+    // 点击其他地方关闭主题菜单
+    document.addEventListener('click', function(event) {
+        const switcher = document.querySelector('.theme-switcher');
+        const isClickInside = switcher.contains(event.target);
+        
+        if (!isClickInside) {
+            const menu = document.getElementById('themeMenu');
+            menu.classList.remove('active');
+        }
+    });
+
+    // 页面加载时恢复之前选择的主题
+    document.addEventListener('DOMContentLoaded', function() {
+        // 确保主题菜单初始状态为关闭
+        const menu = document.getElementById('themeMenu');
+        menu.classList.remove('active');  // 显式移除 active 类
+        
+        // 恢复之前选择的主题
+        const savedTheme = localStorage.getItem('preferred-theme');
+        if (savedTheme) {
+            changeTheme(savedTheme);
+        }
+    });
+</script>
+
+
+

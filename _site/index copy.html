@@ -67,20 +67,39 @@
 
             <div class="w-64 h-full bg-white shadow-lg pt-20">
                 <div class="px-4 py-2">
-                    {% for collection in site.collections %}  
+                      
                     <div class="mb-8">  
-                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">{{ collection.label }}</h3>  
+                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">books</h3>  
                         
-                        {% for item in collection.docs %}  
+                          
                         <div class="space-y-2">  
                             <!-- 假设每个文档有'title'属性，否则显示合适的内容 -->  
-                            <a href="{{ site.baseurl }}{{ item.url }}" class="block text-gray-700 hover:text-blue-600">  
-                            {{ item.title }}  
+                            <a href="/books/2025-01-10-%E6%88%91%E7%9A%84%E4%B8%BB%E9%A1%B5/" class="block text-gray-700 hover:text-blue-600">  
+                            文章2  
                             </a>  
                         </div>  
-                        {% endfor %}  
+                          
                     </div>  
-                    {% endfor %}
+                      
+                    <div class="mb-8">  
+                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">posts</h3>  
+                        
+                          
+                        <div class="space-y-2">  
+                            <!-- 假设每个文档有'title'属性，否则显示合适的内容 -->  
+                            <a href="/2025/01/15/%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E.html" class="block text-gray-700 hover:text-blue-600">  
+                            软件说明  
+                            </a>  
+                        </div>  
+                          
+                    </div>  
+                      
+                    <div class="mb-8">  
+                        <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">projects</h3>  
+                        
+                          
+                    </div>  
+                    
              
                 </div>
             </div>
@@ -162,7 +181,120 @@
                     </div>
                 </div>
             </div>
-            {{ content }}
+              
+  
+
+<h2>所有集合目录</h2>  
+<ul class="collection-directory">  
+    
+      
+      
+      <li>  
+        <h3>books</h3>  
+        <ul class="collection-docs">  
+            
+              
+            <li class="doc-item">  
+                
+                <ul class="subdir">  
+                    
+                    
+                      
+                        
+                      <li>  
+                        <span>_books</span>  
+                          
+                          <ul>  
+                              
+                                
+                              
+                          </ul>  
+                          
+                      </li>  
+                      
+                    
+                      
+                        
+                      <li>  
+                        <span>2025-01-10-我的主页.md</span>  
+                          
+                          <ul>  
+                              
+                                
+                              
+                          </ul>  
+                          
+                      </li>  
+                      
+                    
+                </ul>  
+                
+            </li>  
+            
+        </ul>  
+      </li>  
+      
+    
+      
+      
+      <li>  
+        <h3>posts</h3>  
+        <ul class="collection-docs">  
+            
+              
+            <li class="doc-item">  
+                
+                <ul class="subdir">  
+                    
+                    
+                      
+                        
+                      <li>  
+                        <span>_posts</span>  
+                          
+                          <ul>  
+                              
+                                
+                              
+                          </ul>  
+                          
+                      </li>  
+                      
+                    
+                      
+                        
+                      <li>  
+                        <span>2025-01-15-软件说明.md</span>  
+                          
+                          <ul>  
+                              
+                                
+                              
+                          </ul>  
+                          
+                      </li>  
+                      
+                    
+                </ul>  
+                
+            </li>  
+            
+        </ul>  
+      </li>  
+      
+    
+      
+      
+      <li>  
+        <h3>projects</h3>  
+        <ul class="collection-docs">  
+            
+        </ul>  
+      </li>  
+      
+    
+</ul>
+
         </main>
     </div>
 

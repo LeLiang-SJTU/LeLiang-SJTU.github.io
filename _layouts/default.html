@@ -2,19 +2,24 @@
 
 <body class="bg-gray-50">
 
-    <div>
+    <div x-data="{ 
+        isNavOpen: true,
+        isSidebarOpen: true,
+        currentSlide: 0,
+        nextSlide() {
+            this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+        }
+    }"
+    x-init="setInterval(() => nextSlide(), 5000)">
          <!-- 导航栏 -->
          {% include navigation.html %}
         
          <!-- 侧边栏 -->
          {% include  sidebar.html %}
  
- 
- 
          <!-- 主要内容 -->
-         <main class="transition-all duration-300" :class="{ 'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen }">
+         <main class="transition-all duration-300 pt-20" :class="{ 'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen }">
                {{ content }}
          </main>
     </div>
 </body>
-</html>

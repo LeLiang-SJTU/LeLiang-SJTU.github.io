@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+    <title>{{ page.title }}</title>
+    <style>
+        .post {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .post-header {
+            margin-bottom: 30px;
+        }
+        .post-meta {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .post-content {
+            line-height: 1.6;
+        }
+        .categories, .tags {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <article class="post">
+        <header class="post-header">
+            <h1 class="post-title">{{ page.title }}</h1>
+            <p class="post-meta">
+                <time datetime="{{ page.date | date_to_xmlschema }}">
+                    {{ page.date | date: "%B %-d, %Y" }}
+                </time>
+                {% if page.author %}
+                    • <span class="post-author">{{ page.author }}</span>
+                {% endif %}
+            </p>
+        </header>
+    
+        <div class="post-content">
+            {{ content }}
+        </div>
+    
+        {% if page.categories or page.tags %}
+        <div class="post-meta">
+            {% if page.categories %}
+            <div class="categories">
+                Categories: {{ page.categories | join: ', ' }}
+            </div>
+            {% endif %}
+            
+            {% if page.tags %}
+            <div class="tags">
+                Tags: {{ page.tags | join: ', ' }}
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </article>
+</body>
