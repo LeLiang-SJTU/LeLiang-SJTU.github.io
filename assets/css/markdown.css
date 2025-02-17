@@ -437,8 +437,8 @@
     font-size: 0.9em;
     color: #abb2bf;
 }
-/* 代码高亮 */
-.highlight{
+/* 暗色主题代码高亮 */
+.markdown-theme-gallery .highlight {
     .c { color: #8b949e; }  /* 注释 */
     .k { color: #ff7b72; font-weight: bold; }  /* 关键字 */
     .s { color: #a5d6ff; }  /* 字符串 */
@@ -449,6 +449,7 @@
     .f { color: #d2a8ff; }  /* 函数 */
     .v { color: #ffa657; }  /* 变量 */
 }
+
 
 /* 引用块样式 */
 [class^="markdown-theme"] blockquote {

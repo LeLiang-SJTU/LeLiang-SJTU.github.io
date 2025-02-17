@@ -7,7 +7,6 @@
     <meta name="description" content="L先生的博客,一个有趣而精彩的地方。">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.3.0/alpine.js" defer></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <link href="/assets/css/syntax.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/markdown.css">
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
     <script type="text/x-mathjax-config">
@@ -44,7 +43,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
-                <span class="text-2xl font-bold text-gray-800">MyBlog</span>
+                <a href="/" class="text-2xl font-bold text-gray-800">洛洛的生活记录</a>
             </div>
             <div class="hidden md:flex space-x-8">
 
@@ -59,8 +58,6 @@
                 
                 <a href="/about" class="text-gray-600 hover:text-gray-900 font-medium" >   关于</a> 
                 
-
-                <a href="#" class="text-gray-600 hover:text-gray-900 font-medium">关于</a>
             </div>
         </div>
     </div>
@@ -79,7 +76,7 @@
                     <div class="space-y-2">  
                       <a href="/books/2025-01-10-%E6%88%91%E7%9A%84%E4%B8%BB%E9%A1%B5/"   
                          class="block text-gray-700 hover:text-blue-600 ">  
-                        文章2  
+                        我的主页  
                       </a>  
                     </div>  
                     
@@ -108,7 +105,7 @@
 </div>
  
          <!-- 主要内容 -->
-         <main class="transition-all duration-300 pt-20" :class="{ 'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen }">
+         <main class="transition-all duration-300 pt-16" :class="{ 'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen }">
                 <!-- 主题切换按钮和菜单 -->
  <div class="theme-switcher">
     <button class="theme-button" onclick="toggleThemeMenu()">🎨</button>
