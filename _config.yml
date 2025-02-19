@@ -43,5 +43,13 @@ kramdown:
   auto_ids: true
   enable_coderay: false     # 如果使用 rouge，需关闭 coderay
 
+# Add default front matter for all pages
+defaults:
+  - scope:
+      path: ""      # Apply to all files
+      type: "posts" # Apply to posts
+    values:
+      toc: true     # Enable TOC by default
+
 plugins:
   - jekyll-toc

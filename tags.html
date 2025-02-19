@@ -1,0 +1,216 @@
+---
+layout: default
+---
+ 
+{% assign unique_tags = all_tags | uniq | sort_natural %}
+{% for tags in site.tags %}
+<section class="category" id="tag-section-{{ tags[0] }}">
+    <h3>{{ tags[0] }}</h3>
+    {% assign first_post = tags[1] | first %}
+    {% if first_post %}
+    <div class="single-post" onclick="window.location.href='{{ first_post.url }}'">
+        <div class="post-header">
+            <h4>{{ first_post.title }}</h4>
+            <div class="post-meta">
+                <span class="post-date">{{ first_post.date | date: "%Y-%m-%d" }}</span>
+            </div>
+        </div>
+        <div class="post-divider"></div>
+        {% if first_post.excerpt %}
+            <p>{{ first_post.excerpt }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="all-posts" style="display: none;">
+        {% for post in tags[1] %}
+        <div class="post-item" onclick="window.location.href='{{ post.url }}'">
+            <div class="post-header">
+                <h4>{{ post.title }}</h4>
+                <div class="post-meta">
+                    <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+                </div>
+            </div>
+            <div class="post-divider"></div>
+            {% if post.excerpt %}
+                <p>{{ post.excerpt }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="#" class="toggle-posts" data-collection="tag-section-{{ tags[0] }}">查看更多...</a>
+</section>
+{% endfor %}
+
+<style>
+ 
+  .post-category {
+      background: rgba(255,255,255,0.9);
+      color: #333;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+  }
+  
+  .category {
+      max-width: 1200px;  /* 增加最大宽度 */
+      margin: 3em auto;
+      position: relative;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  }
+  
+  .category h3 {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 1.5em;
+      color: #333;
+      position: relative;
+  }
+  
+  .category h3:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: #FFD700; /* Change from #007bff to gold */
+  }
+  
+  .toggle-posts {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      text-decoration: none;
+      color: #DAA520; /* Change from #007bff to goldenrod */
+      font-size: 0.9em;
+      padding: 5px 10px;
+      border-radius: 4px;
+      background: rgba(218,165,32,0.1); /* Change from rgba(0,123,255,0.1) */
+      transition: all 0.3s ease;
+  }
+  
+  .toggle-posts:hover {
+      color: #B8860B; /* Darker gold */
+      background: rgba(218,165,32,0.2);
+  }
+  
+  .post-item {
+      background: rgb(246, 248, 225);
+    border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+  }
+  
+  .post-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(218,165,32,0.3); /* Change to gold shadow */
+  }
+  
+  .post-item h4 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 1.1em;  /* 调小字体 */
+  }
+  
+  .post-item p {
+      color: #505f6f;
+      font-size: 0.95em;
+      line-height: 1.7;
+      margin: 0;
+  }
+  
+  .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+  }
+  
+  .post-header h4 {
+      margin: 0;
+      color: #2c3e50;
+      font-size: 1.1em;  /* 统一设置为相同大小 */
+  }
+  
+  .post-meta {
+      font-size: 0.85em;
+      color: #7f8c8d;
+  }
+  
+  .post-date {
+      padding: 3px 8px;
+      background: #f8f9fa;
+      border-radius: 4px;
+  }
+  
+  .post-divider {
+      height: 1px;
+      background: linear-gradient(to right, #e0e0e0, #f5f5f5);
+      margin: 10px 0 15px 0;
+  }
+  
+  .single-post {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+      cursor: pointer;
+  }
+  
+  .single-post:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(218,165,32,0.3); /* Change to gold shadow */
+  }
+  
+  .single-post h4 {
+      font-size: 1.1em;  /* 使单个文章标题字体与列表一致 */
+      color: #040404;
+      margin-bottom: 10px;
+  }
+  
+  .single-post p {
+      color: #888885;
+      font-size: 0.95em;
+      line-height: 1.7;
+      margin: 0;
+  }
+  </style>
+  
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const toggles = document.querySelectorAll('.toggle-posts');
+      toggles.forEach(toggle => {
+          toggle.addEventListener('click', function(e) {
+              e.preventDefault();
+              const section = document.getElementById(this.dataset.collection);
+              const allPosts = section.querySelector('.all-posts');
+              const singlePost = section.querySelector('.single-post');
+              
+              if (allPosts.style.display === 'none') {
+                  allPosts.style.display = 'block';
+                  singlePost.style.display = 'none';
+                  this.textContent = '点击收起=。=';
+                  this.style.backgroundColor = '#f8d7da';
+              } else {
+                  allPosts.style.display = 'none';
+                  singlePost.style.display = 'block';
+                  this.textContent = '查看更多...';
+                  this.style.backgroundColor = 'rgba(0,123,255,0.1)';
+              }
+          });
+      });
+  });
+
+  </script>

@@ -6,22 +6,31 @@ layout: default
     <div class="theme-switcher">
         <button class="theme-button"></button>
         <div class="theme-menu" id="themeMenu">
+            <div class="theme-option" data-theme="typora">typora主题</div>
+            <div class="theme-option" data-theme="golden">金色主题</div>
             <div class="theme-option" data-theme="github">GitHub主题</div>
             <div class="theme-option" data-theme="dark">暗色主题</div>
             <div class="theme-option" data-theme="green">护眼主题</div>
-            <div class="theme-option" data-theme="typora">typora主题</div>
             <div class="theme-option" data-theme="gallery">美化主题</div>
         </div>
     </div>
 
     <article class="article">
-        <h1 class="article-title">{{ page.title }}</h1>
-        <div class="article-title">{{ page.date | date: "%Y-%m-%d" }}</div>
-        {% if page.tags %}
-        <div class="article-tags">
-            标签：{{ page.tags | join: ", " }}
+        <div class="article-header">
+            <div class="article-meta">
+                <span class="article-date">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ page.date | date: "%Y-%m-%d" }}
+                </span>
+                {% if page.tags %}
+                <span class="article-tags">
+                    <i class="fas fa-tags"></i>
+                    {{ page.tags | join: ", " }}
+                </span>
+                {% endif %}
+            </div>
+            <h1 class="article-title">{{ page.title }}</h1>
         </div>
-        {% endif %}
         <div class="markdown-theme-github">{{ content }}</div>
     </article>
 

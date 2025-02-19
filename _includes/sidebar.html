@@ -54,7 +54,7 @@
           {% endfor %}
         {% endfor %}
         
-        {% assign unique_tags = all_tags | uniq | sort %}
+        {% assign unique_tags = all_tags | uniq | sort_natural %}
         
         {% for tag in unique_tags %}
           {% assign tag_count = 0 %}
@@ -66,7 +66,7 @@
             {% endfor %}
           {% endfor %}
           
-          <a href="{{ site.baseurl }}/#tag-{{ tag | slugify }}" class="tag-item" data-tag="{{ tag }}">
+          <a href="{{ site.baseurl }}/tags/#tag-section-{{ tag | slugify }}" class="tag-item" data-tag="{{ tag }}">
             {{ tag }}
             <span class="tag-count">{{ tag_count }}</span>
           </a>
@@ -201,11 +201,10 @@
 .collection-items {
   overflow: hidden;
   transition: max-height 0.3s ease;
-  max-height: 0;
 }
 
 .collection-items.expanded {
-  max-height: 1000px; /* 或者更大的值，取决于内容高度 */
+  max-height: 1000px; /* Adjust based on your needs */
 }
 
 .collection-items.collapsed {
@@ -375,34 +374,34 @@
   align-items: center;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  background: #f1f5f9;
-  color: #475569;
+  background: #FFF8DC; /* Change from #f1f5f9 to light gold */
+  color: #B8860B; /* Change from #475569 to darker gold */
   font-size: 0.875rem;
   text-decoration: none;
   transition: all 0.2s ease;
 }
 
 .tag-item:hover {
-  background: #e2e8f0;
-  color: #2563eb;
+  background: #FFE4B5;
+  color: #DAA520;
 }
 
 .tag-count {
   margin-left: 0.5rem;
   font-size: 0.75rem;
-  background: #e2e8f0;
+  background: #FFD700; /* Change from #e2e8f0 to gold */
+  color: #8B4513; /* Dark brown text for contrast */
   padding: 0.125rem 0.375rem;
   border-radius: 9999px;
 }
 
-
 .tag-item.active {
-  background: #2563eb;
+  background: #DAA520; /* Change from #2563eb to goldenrod */
   color: white;
 }
 
 .tag-item.active .tag-count {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
 }
 </style>
 
@@ -410,22 +409,41 @@
 document.addEventListener('DOMContentLoaded', function() {
   const tabs = document.querySelectorAll('.sidebar-tab');
   
+  // Function to switch to a specific tab
+  function switchToTab(tabName) {
+    tabs.forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.remove('active');
+    });
+    
+    const targetTab = document.querySelector(`.sidebar-tab[data-tab="${tabName}"]`);
+    const targetContent = document.getElementById(`${tabName}-content`);
+    
+    if (targetTab && targetContent) {
+      targetTab.classList.add('active');
+      targetContent.classList.add('active');
+    }
+  }
+  
+  // Determine which tab to show based on current page
+  const currentPath = window.location.pathname;
+  
+  if (document.querySelector('#toc-content')) {
+    // If TOC exists, we're on a post page
+    switchToTab('toc');
+  } else if (currentPath.includes('/tags/')) {
+    // If we're on the tags page
+    switchToTab('tags');
+  } else {
+    // Default to navigation tab
+    switchToTab('nav');
+  }
+  
+  // Add click handlers for manual tab switching
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      // Remove active class from all tabs
-      tabs.forEach(t => t.classList.remove('active'));
-      
-      // Hide all content
-      document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-      });
-      
-      // Show selected content
       const tabName = tab.getAttribute('data-tab');
-      document.getElementById(`${tabName}-content`).classList.add('active');
-      
-      // Add active class to clicked tab
-      tab.classList.add('active');
+      switchToTab(tabName);
     });
   });
 
@@ -541,8 +559,32 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('load', expandActiveParents);
   }
 
+  // Add this code inside the DOMContentLoaded event listener, after the tab switching code
+
+  // Highlight current tag
+  if (currentPath.includes('/tags/')) {
+    const hashTag = window.location.hash.replace('#tag-', '');
+    const decodedTag = decodeURIComponent(hashTag);
+    document.querySelectorAll('.tag-item').forEach(tag => {
+      if (tag.getAttribute('data-tag') === decodedTag) {
+        tag.classList.add('active');
+      } else {
+        tag.classList.remove('active');
+      }
+    });
+
+    // Add click handlers for tags
+    document.querySelectorAll('.tag-item').forEach(tag => {
+      tag.addEventListener('click', () => {
+        document.querySelectorAll('.tag-item').forEach(t => t.classList.remove('active'));
+        tag.classList.add('active');
+      });
+    });
+  }
+
   // Collection group click handling
   const collectionGroups = document.querySelectorAll('.collection-group');
+  let collectionClickTimer = null;
 
   collectionGroups.forEach(group => {
     const title = group.querySelector('.collection-title');
@@ -551,50 +593,42 @@ document.addEventListener('DOMContentLoaded', function() {
     const items = group.querySelector('.collection-items');
     let clickTimer = null;
     
-    // Add initial state
-    items.classList.add('collapsed');
+    // Add a class to control visibility
+    items.classList.add('expanded');
     
-    // Arrow click handler
+    // 箭头点击处理
     arrow.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleCollectionItems(items);
+        e.stopPropagation();
+        items.classList.toggle('expanded');
+        items.classList.toggle('collapsed');
     });
     
-    // Title text click handler
+    // 标题文字点击处理 - 双击展开/折叠,单击跳转
     titleText.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      if (clickTimer) {
-        // Double click - toggle expand/collapse
-        clearTimeout(clickTimer);
-        clickTimer = null;
-        toggleCollectionItems(items);
-      } else {
-        // Single click - navigate
-        clickTimer = setTimeout(() => {
-          clickTimer = null;
-          const href = titleText.getAttribute('href');
-          if (href) {
-            window.location.href = href;
-          }
-        }, 200);
-      }
+        e.stopPropagation();
+        
+        if (clickTimer) {
+            // 双击 - 展开/折叠
+            clearTimeout(clickTimer);
+            clickTimer = null;
+            items.classList.toggle('expanded');
+            items.classList.toggle('collapsed');
+        } else {
+            // 单击 - 跳转
+            clickTimer = setTimeout(() => {
+                clickTimer = null;
+                const href = titleText.getAttribute('href');
+                if (href) {
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            }, 200);
+        }
     });
-  });
+});
 
-  // Helper function to toggle collection items
-  function toggleCollectionItems(items) {
-    if (items.classList.contains('collapsed')) {
-      items.classList.remove('collapsed');
-      items.classList.add('expanded');
-      items.style.maxHeight = `${items.scrollHeight}px`;
-    } else {
-      items.classList.remove('expanded');
-      items.classList.add('collapsed');
-      items.style.maxHeight = '0';
-    }
-  }
+ 
 });
 </script>
