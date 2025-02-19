@@ -2,73 +2,99 @@
 layout: default
 ---
 
-
- <!-- 主题切换按钮和菜单 -->
- <div class="theme-switcher">
-    <button class="theme-button" onclick="toggleThemeMenu()">🎨</button>
-    <div class="theme-menu" id="themeMenu">
-        <div class="theme-option" onclick="changeTheme('github')">GitHub主题</div>
-        <div class="theme-option" onclick="changeTheme('dark')">暗色主题</div>
-        <div class="theme-option" onclick="changeTheme('green')">护眼主题</div>
-        <div class="theme-option" onclick="changeTheme('typora')">typora主题</div>
-        <div class="theme-option" onclick="changeTheme('gallery')">美化主题</div>
+<body>
+    <div class="theme-switcher">
+        <button class="theme-button"></button>
+        <div class="theme-menu" id="themeMenu">
+            <div class="theme-option" data-theme="github">GitHub主题</div>
+            <div class="theme-option" data-theme="dark">暗色主题</div>
+            <div class="theme-option" data-theme="green">护眼主题</div>
+            <div class="theme-option" data-theme="typora">typora主题</div>
+            <div class="theme-option" data-theme="gallery">美化主题</div>
+        </div>
     </div>
-</div>
 
-<article class="bg-white rounded-lg shadow-md p-6">
-    <h1 class="text-3xl font-bold mb-4">{{ page.title }}</h1>
-    <div class="text-gray-500 mb-6">{{ page.date | date: "%Y-%m-%d" }}</div>
+    <article class="article">
+        <h1 class="article-title">{{ page.title }}</h1>
+        <div class="article-title">{{ page.date | date: "%Y-%m-%d" }}</div>
+        {% if page.tags %}
+        <div class="article-tags">
+            标签：{{ page.tags | join: ", " }}
+        </div>
+        {% endif %}
+        <div class="markdown-theme-github">{{ content }}</div>
+    </article>
 
-    <!-- Markdown 内容容器 -->
+    <script>
+        // 主要变量定义
+        const article = document.querySelector('article');
+        const themeMenu = document.getElementById('themeMenu');
+        const themeButton = document.querySelector('.theme-button');
+        const markdownContainer = document.querySelector('[class^="markdown-theme"]');
+        let isWideScreen = localStorage.getItem('content-width') === 'wide';
 
+        // 工具函数
+        const setArticleWidth = (isWide) => {
+            const baseClasses = 'bg-white rounded-lg shadow-md p-6';
+            article.className = `${baseClasses} content-${isWide ? 'wide' : 'narrow'}`;
+            localStorage.setItem('content-width', isWide ? 'wide' : 'narrow');
+        };
 
-    <div class="markdown-theme-github">
-        {{ content }}
-    </div>
-</article>
+        const changeTheme = (theme) => {
+            markdownContainer.className = `markdown-theme-${theme}`;
+            localStorage.setItem('preferred-theme', theme);
+            themeMenu.classList.remove('active');
+        };
 
+        // 事件监听设置
+        let clickTimer = null;
 
-<script>
-    // 主题切换功能
-    function changeTheme(theme) {
-        const container = document.querySelector('[class^="markdown-theme"]');
-        container.className = `markdown-theme-${theme}`;
-        // 保存主题选择到 localStorage
-        localStorage.setItem('preferred-theme', theme);
-        // 关闭主题菜单
-        toggleThemeMenu();
-    }
+        themeButton.addEventListener('click', (e) => {
+            if (e.detail === 1) {
+                clickTimer = setTimeout(() => {
+                    themeMenu.classList.toggle('active');
+                    e.stopPropagation();
+                }, 200); // 200ms 延迟，等待可能的双击事件
+            }
+        });
 
-    // 切换主题菜单显示/隐藏
-    function toggleThemeMenu() {
-        const menu = document.getElementById('themeMenu');
-        menu.classList.toggle('active');
-    }
+        themeButton.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            clearTimeout(clickTimer); // 清除单击事件的计时器
+            themeMenu.classList.remove('active');
+            isWideScreen = !isWideScreen;
+            setArticleWidth(isWideScreen);
+        });
 
-    // 点击其他地方关闭主题菜单
-    document.addEventListener('click', function(event) {
-        const switcher = document.querySelector('.theme-switcher');
-        const isClickInside = switcher.contains(event.target);
-        
-        if (!isClickInside) {
-            const menu = document.getElementById('themeMenu');
-            menu.classList.remove('active');
-        }
-    });
+        document.addEventListener('click', (e) => {
+            if (!document.querySelector('.theme-switcher').contains(e.target)) {
+                themeMenu.classList.remove('active');
+            }
+        });
 
-    // 页面加载时恢复之前选择的主题
-    document.addEventListener('DOMContentLoaded', function() {
-        // 确保主题菜单初始状态为关闭
-        const menu = document.getElementById('themeMenu');
-        menu.classList.remove('active');  // 显式移除 active 类
-        
-        // 恢复之前选择的主题
-        const savedTheme = localStorage.getItem('preferred-theme');
-        if (savedTheme) {
-            changeTheme(savedTheme);
-        }
-    });
-</script>
+        // 主题选项事件委托
+        document.querySelector('.theme-menu').addEventListener('click', (e) => {
+            const themeOption = e.target.closest('.theme-option');
+            if (themeOption) {
+                changeTheme(themeOption.dataset.theme);
+            }
+        });
+
+        // 页面加载时恢复之前选择的主题和宽度
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('preferred-theme');
+            if (savedTheme) {
+                changeTheme(savedTheme);
+            }
+
+            setArticleWidth(isWideScreen);
+
+            themeMenu.classList.remove('active');
+        });
+    </script>
+    <script src="/assets/js/highlight-search.js"></script>
+</body>
 
 
 

@@ -1,22 +1,600 @@
 <!-- 侧边栏 -->
-<div class="fixed inset-y-0 left-0 transform transition-transform duration-300 z-30"
-        :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }">
-        <div class="w-64 h-full bg-white shadow-lg pt-20">
-            <div class="px-4 py-2">
-                {% for collection in site.collections %}  
-                <div class="mb-8">  
-                    <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">{{ collection.label }}</h3>  
-                    {% for item in collection.docs %}  
-                    <div class="space-y-2">  
-                      <a href="{{ site.baseurl }}{{ item.url }}"   
-                         class="block text-gray-700 hover:text-blue-600 {% if page.url == item.url %}active{% endif %}">  
-                        {{ item.title }}  
-                      </a>  
-                    </div>  
-                    {% endfor %}
-                </div>  
-                {% endfor %}
-         
+<aside class="sidebar">
+  <!-- Sidebar Tabs -->
+  <div class="sidebar-tabs">
+    <button class="sidebar-tab active" data-tab="nav">导航</button>
+    <button class="sidebar-tab" data-tab="tags">标签</button>
+    {% if page.layout == 'post' %}
+    <button class="sidebar-tab" data-tab="toc">目录</button>
+    {% endif %}
+  </div>
+
+  <!-- Sidebar Content -->
+  <div class="sidebar-content" id="sidebar-content">
+    <!-- Navigation Content -->
+    <div class="tab-content active" id="nav-content">
+      <div class="hierarchy-nav">
+        {% if site.collections.size > 0 %}
+          {% for collection in site.collections %}  
+          <div class="collection-group">  
+            <div class="collection-title">
+                <a href="{{ site.baseurl }}/#{{ collection.label }}-section" class="title-text">💠{{ collection.label }}</a>
+                <span class="arrow"></span>
             </div>
-        </div>       
-</div>
+            <div class="collection-items">
+              {% for item in collection.docs %}  
+              <a href="{{ site.baseurl }}{{ item.url }}"   
+                 class="collection-item {% if page.url == item.url %}active{% endif %}">  
+                {{ item.title }}  
+              </a>  
+              {% endfor %}
+            </div>
+          </div>  
+          {% endfor %}
+        {% else %}
+          <div class="empty-state">
+            <svg class="empty-icon" viewBox="0 0 24 24" width="32" height="32">
+              <path fill="currentColor" d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/>
+            </svg>
+            <p>暂无导航内容</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Tags Content -->
+    <div class="tab-content" id="tags-content">
+      <div class="tags-wrapper">
+        {% assign all_tags = "" | split: "" %}
+        {% for collection in site.collections %}
+          {% for post in collection.docs %}
+            {% if post.tags %}
+              {% assign all_tags = all_tags | concat: post.tags %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+        
+        {% assign unique_tags = all_tags | uniq | sort %}
+        
+        {% for tag in unique_tags %}
+          {% assign tag_count = 0 %}
+          {% for collection in site.collections %}
+            {% for post in collection.docs %}
+              {% if post.tags contains tag %}
+                {% assign tag_count = tag_count | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+          
+          <a href="{{ site.baseurl }}/#tag-{{ tag | slugify }}" class="tag-item" data-tag="{{ tag }}">
+            {{ tag }}
+            <span class="tag-count">{{ tag_count }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- TOC Content -->
+    {% if page.layout == 'post' %}
+    <div class="tab-content" id="toc-content">
+      {% include toc.html %}
+    </div>
+    {% endif %}
+  </div>
+</aside>
+
+<style>
+ :root {
+  --sidebar-width: 280px;
+  --primary-color: #2563eb;
+  --text-color: #64748b;
+  --border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Sidebar Base */
+.sidebar {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    width: 250px;
+    height: calc(100vh - var(--nav-height));
+    background: white;
+    padding: 1.5rem;
+    overflow-y: auto;
+    border-right: 1px solid #eaeaea;
+    transition: transform 0.3s ease;
+}
+
+.sidebar.hidden {
+    transform: translateX(-100%);
+}
+
+.sidebar-tabs {
+    display: flex;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.sidebar-tab {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    background: none;
+    flex: 1;
+    color: #64748b; /* Default color matching other text */
+    transition: all 0.2s ease;
+}
+
+.sidebar-tab.active {
+    border-bottom: 2px solid #2563eb; /* Change from #4CAF50 to primary blue */
+    color: #2563eb; /* Change from #4CAF50 to primary blue */
+}
+
+.sidebar-tab:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.04);
+}
+/* Tab Content */
+.tab-content {
+  display: none;
+  padding: 1.5rem 0;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Navigation Styles */
+.hierarchy-nav {
+  padding: 0 1.5rem;
+}
+
+/* Collection Styles */
+.collection-group {
+  margin-bottom: 2rem;
+}
+
+.collection-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155; /* 更深的颜色用于标题 */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    transition: color 0.2s ease;
+    user-select: none; /* 禁用文字选择 */
+}
+
+.collection-title:hover {
+    color: #1d4ed8; /* 悬停时的颜色 */
+}
+
+.collection-item {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
+    color: #64748b; /* 更浅的颜色用于文章标题 */
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+}
+
+.collection-item:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.04);
+}
+
+.collection-item.active {
+    color: #2563eb;
+    font-weight: 500;
+    background: rgba(37, 99, 235, 0.06);
+    border-left: 2px solid #2563eb;
+}
+
+/* Collection items visibility states */
+.collection-items {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  max-height: 0;
+}
+
+.collection-items.expanded {
+  max-height: 1000px; /* 或者更大的值，取决于内容高度 */
+}
+
+.collection-items.collapsed {
+  max-height: 0;
+}
+
+/* Add arrow indicator to collection title */
+.collection-title .arrow {
+    display: inline-block;
+    width: 0.4rem;
+    height: 0.4rem;
+    margin-left: 0.5rem;
+    border-right: 2px solid #94a3b8;
+    border-bottom: 2px solid #94a3b8;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.collection-group:has(.collection-items.collapsed) .arrow {
+    transform: rotate(-135deg);
+}
+
+/* 移除原来的::after伪元素样式 */
+.collection-title::after {
+    content: none;
+}
+
+.collection-title .title-text {
+    flex: 1;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* TOC Styles */
+#toc-content {
+    padding: 1rem 1.5rem;
+}
+
+#toc-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#toc-content ul li {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+#toc-content ul li a {
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: block;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.25rem;
+    border-left: 2px solid transparent;
+}
+
+#toc-content ul li a:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.04);
+}
+
+#toc-content ul li a.active {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.06);
+    border-left: 2px solid #2563eb;
+}
+
+/* 目录层级缩进 */
+#toc-content ul ul {
+    margin-left: 1rem;
+    margin-top: 0.25rem;
+}
+
+#toc-content ul ul li {
+    margin-bottom: 0.25rem;
+}
+
+#toc-content ul ul li a {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+/* TOC Styles Update */
+#toc-content ul li.has-children > a {
+    padding-right: 1.5rem;
+    position: relative;
+    cursor: pointer;
+}
+
+#toc-content ul li.has-children > a::after {
+    content: '';
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-right: 2px solid #94a3b8;
+    border-bottom: 2px solid #94a3b8;
+    transform: translateY(-70%) rotate(45deg);
+    transition: transform 0.2s ease;
+}
+
+#toc-content ul li.has-children.expanded > a::after {
+    transform: translateY(-30%) rotate(-135deg);
+}
+
+#toc-content ul ul {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+#toc-content ul li.expanded > ul {
+    height: auto;
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/* Empty State Styles */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.empty-icon {
+  margin-bottom: 1rem;
+  color: #cbd5e1;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Tags Styles */
+.tags-wrapper {
+  padding: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.tag-item:hover {
+  background: #e2e8f0;
+  color: #2563eb;
+}
+
+.tag-count {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  background: #e2e8f0;
+  padding: 0.125rem 0.375rem;
+  border-radius: 9999px;
+}
+
+
+.tag-item.active {
+  background: #2563eb;
+  color: white;
+}
+
+.tag-item.active .tag-count {
+  background: rgba(255, 255, 255, 0.2);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const tabs = document.querySelectorAll('.sidebar-tab');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Remove active class from all tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      
+      // Hide all content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Show selected content
+      const tabName = tab.getAttribute('data-tab');
+      document.getElementById(`${tabName}-content`).classList.add('active');
+      
+      // Add active class to clicked tab
+      tab.classList.add('active');
+    });
+  });
+
+  // 添加目录滚动监听
+  if (document.querySelector('#toc-content')) {
+    const tocLinks = document.querySelectorAll('#toc-content a');
+    const observerOptions = {
+        rootMargin: '-60px 0px -80% 0px',
+        threshold: 0
+    };
+
+    const headingsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const id = entry.target.getAttribute('id');
+            const tocLink = document.querySelector(`#toc-content a[href="#${id}"]`);
+            
+            if (tocLink) {
+                if (entry.isIntersecting) {
+                    tocLinks.forEach(link => link.classList.remove('active'));
+                    tocLink.classList.add('active');
+                }
+            }
+        });
+    }, observerOptions);
+
+    // 观察所有标题元素
+    document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach((heading) => {
+        headingsObserver.observe(heading);
+    });
+  }
+
+  // Replace the existing TOC initialization code
+  if (document.querySelector('#toc-content')) {
+    const tocItems = document.querySelectorAll('#toc-content ul li');
+    let clickTimer = null;
+    
+    tocItems.forEach(item => {
+        const subList = item.querySelector('ul');
+        const link = item.querySelector('a');
+        
+        if (subList) {
+            item.classList.add('has-children');
+            const level = getItemLevel(item);
+            
+            // 默认展开到二级目录
+            if (level <= 2) {
+                item.classList.add('expanded');
+                subList.style.height = 'auto';
+            } else {
+                item.classList.add('collapsed');
+            }
+
+            // 处理点击事件
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (clickTimer) {
+                    // 双击：切换折叠状态
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
+                    item.classList.toggle('collapsed');
+                    item.classList.toggle('expanded');
+                    if (item.classList.contains('expanded')) {
+                        subList.style.height = 'auto';
+                    } else {
+                        subList.style.height = '0';
+                    }
+                } else {
+                    // 单击：导航到位置
+                    clickTimer = setTimeout(() => {
+                        clickTimer = null;
+                        const href = link.getAttribute('href');
+                        if (href) {
+                            const target = document.querySelector(href);
+                            if (target) {
+                                target.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        }
+                    }, 200);
+                }
+            });
+        }
+    });
+
+    // 获取目录项层级的辅助函数
+    function getItemLevel(item) {
+        let level = 1;
+        let parent = item.parentElement;
+        while (parent && parent.tagName === 'UL') {
+            level++;
+            parent = parent.parentElement.closest('ul');
+        }
+        return level;
+    }
+
+    // 确保当前活动项可见
+    function expandActiveParents() {
+        const activeLink = document.querySelector('#toc-content a.active');
+        if (activeLink) {
+            let parent = activeLink.parentElement;
+            while (parent && parent.tagName === 'LI') {
+                parent.classList.remove('collapsed');
+                parent.classList.add('expanded');
+                const subList = parent.querySelector('ul');
+                if (subList) {
+                    subList.style.height = 'auto';
+                }
+                parent = parent.parentElement.closest('li');
+            }
+        }
+    }
+
+    // 初始化时展开当前项的父级
+    window.addEventListener('load', expandActiveParents);
+  }
+
+  // Collection group click handling
+  const collectionGroups = document.querySelectorAll('.collection-group');
+
+  collectionGroups.forEach(group => {
+    const title = group.querySelector('.collection-title');
+    const titleText = group.querySelector('.title-text');
+    const arrow = group.querySelector('.arrow');
+    const items = group.querySelector('.collection-items');
+    let clickTimer = null;
+    
+    // Add initial state
+    items.classList.add('collapsed');
+    
+    // Arrow click handler
+    arrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleCollectionItems(items);
+    });
+    
+    // Title text click handler
+    titleText.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (clickTimer) {
+        // Double click - toggle expand/collapse
+        clearTimeout(clickTimer);
+        clickTimer = null;
+        toggleCollectionItems(items);
+      } else {
+        // Single click - navigate
+        clickTimer = setTimeout(() => {
+          clickTimer = null;
+          const href = titleText.getAttribute('href');
+          if (href) {
+            window.location.href = href;
+          }
+        }, 200);
+      }
+    });
+  });
+
+  // Helper function to toggle collection items
+  function toggleCollectionItems(items) {
+    if (items.classList.contains('collapsed')) {
+      items.classList.remove('collapsed');
+      items.classList.add('expanded');
+      items.style.maxHeight = `${items.scrollHeight}px`;
+    } else {
+      items.classList.remove('expanded');
+      items.classList.add('collapsed');
+      items.style.maxHeight = '0';
+    }
+  }
+});
+</script>

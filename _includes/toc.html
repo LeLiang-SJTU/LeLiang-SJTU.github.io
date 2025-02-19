@@ -1,15 +1,3 @@
-<div id="toc" class="toc-container">  
-    <h2>目录</h2>  
-    <ul class="toc">  
-      {% for heading in page.content | split: '#' %}  
-        {% if heading | startswith: '#' %}  
-          {% assign level = heading | sub: '#' | sub: ' ' | size %}  
-          <li class="level-{{ level }}">  
-            <a href="#{{ heading | sub: '#' | sub: ' ' | url_encode }}">  
-              {{ heading | sub: '#' | sub: ' ' | escape }}  
-            </a>  
-          </li>  
-        {% endif %}  
-      {% endfor %}  
-    </ul>  
-  </div>
+<div id="toc" class="toc-container">    
+  {% toc %}
+</div>

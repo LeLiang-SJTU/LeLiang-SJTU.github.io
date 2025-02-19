@@ -1,18 +1,23 @@
-title: "L先生的博客"
+title: "Lo先生的博客"
 description: "L先生的博客,一个有趣而精彩的地方。"
 url: "https://leliang-sjtu.github.io/" 
-author: "John Doe"  
+author: "Lo"
+author_image: "https://leliang-sjtu.github.io/assets/images/avatar.jpg"
 social_links:  
   github: "https://github.com//LeLiang-SJTU"  
 #theme: minima
-#使用集合
-collections:
 
+#source: docs  # 指定
+collections_dir: docs
+
+#使用集合
+
+
+#collections_dir: docs
+collections:
   books:
-    output: true  # 是否生成独立页面
-    permalink: /books/:path/  # 自定义 URL 结构
-  projects:
-    output: false # 仅作为数据，不生成页面
+    output: true
+    permalink: /books/:path/
 
 # Navigation settings
 navigation:
@@ -22,8 +27,8 @@ navigation:
     url: /tech
   - title: 生活
     url: /life
-  - title: 其他
-    url: /life
+  - title: GIthub项目
+    url: /githubs
   - title: 关于
     url: /about
 
@@ -37,3 +42,6 @@ kramdown:
   parse_span_html: true
   auto_ids: true
   enable_coderay: false     # 如果使用 rouge，需关闭 coderay
+
+plugins:
+  - jekyll-toc

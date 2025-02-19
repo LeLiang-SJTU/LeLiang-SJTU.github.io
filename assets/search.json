@@ -1,0 +1,14 @@
+---
+layout: none
+---
+[
+  {% assign all_documents = site.documents %}
+  {% for doc in all_documents %}
+    {
+      "title": {{ doc.title | jsonify }},
+      "url": {{ doc.url | prepend: site.baseurl | jsonify }},
+      "date": {{ doc.date | date: "%Y-%m-%d" | jsonify }},
+      "content": {{ doc.content | strip_html | strip_newlines | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+  {% endfor %}
+]

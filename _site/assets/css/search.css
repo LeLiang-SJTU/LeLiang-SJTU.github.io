@@ -1,0 +1,25 @@
+.search-match.hidden {
+    display: none !important; /* 使用 !important 确保样式生效 */
+}
+
+.search-result-group {
+    margin-bottom: 1rem;
+}
+
+.show-more-matches {
+    background: none;
+    border: none;
+    color: #0366d6;
+    cursor: pointer;
+    padding: 5px 0;
+    font-size: 14px;
+}
+
+.show-more-matches:hover {
+    text-decoration: underline;
+}
+
+/* 确保搜索结果容器默认隐藏 */
+.search-results {
+    display: none;
+}

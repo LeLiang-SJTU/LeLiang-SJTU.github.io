@@ -1,25 +1,39 @@
+
 {% include head.html %}
+<body>
+    <!-- 导航栏 -->
+    {% include navigation.html %}
 
-<body class="bg-gray-50">
 
-    <div x-data="{ 
-        isNavOpen: true,
-        isSidebarOpen: true,
-        currentSlide: 0,
-        nextSlide() {
-            this.currentSlide = (this.currentSlide + 1) % this.slides.length;
-        }
-    }"
-    x-init="setInterval(() => nextSlide(), 5000)">
-         <!-- 导航栏 -->
-         {% include navigation.html %}
-        
-         <!-- 侧边栏 -->
-         {% include  sidebar.html %}
+
+    <div class="main-container">
+        <!-- 侧边栏 -->
+        {% include  sidebar.html %}
+
+
+        <main class="content">
+            {{ content }}
  
-         <!-- 主要内容 -->
-         <main class="transition-all duration-300 pt-16" :class="{ 'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen }">
-               {{ content }}
-         </main>
+        </main>
     </div>
+
+    <script>
+        // Toggle sidebar
+        const toggleButton = document.querySelector('.toggle-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+        
+        toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+        });
+
+        // Switch sidebar tabs
+        const tabs = document.querySelectorAll('.sidebar-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
 </body>
+</html>

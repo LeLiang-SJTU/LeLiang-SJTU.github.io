@@ -1,0 +1,71 @@
+---
+layout: post
+title: Projects
+---
+
+<div id="projects-container">
+  <!-- 项目列表将在此动态生成 -->
+  <div class="project-card">
+    <h3><a href=" ">项目名称</a></h3>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+// 获取所有公开仓库
+const username = "LeLiang-SJTU";
+const apiUrl = `https://api.github.com/users/${username}/repos`;
+
+fetch(apiUrl)
+  .then(response => response.json())
+  .then(repos => {
+    // 遍历所有仓库
+    repos.forEach(repo => {
+      // 获取每个仓库的 README
+      const readmeUrl = `https://raw.githubusercontent.com/${username}/${repo.name}/main/README.md`;
+      
+      // 创建项目卡片
+      const projectCard = document.createElement('div');
+      projectCard.className = 'project-card';
+      projectCard.innerHTML = `
+        <h3><a href="${repo.html_url}">${repo.name}</a></h3>
+        <p>${repo.description || '暂无描述'}</p>
+        <div class="readme-content" id="readme-${repo.name}"></div>
+      `;
+      
+      // 添加到容器中
+      document.getElementById('projects-container').appendChild(projectCard);
+      
+      // 获取并显示 README 内容
+      fetch(readmeUrl)
+        .then(res => res.text())
+        .then(content => {
+          const readmeElement = document.getElementById(`readme-${repo.name}`);
+          readmeElement.innerHTML = marked.parse(content);
+        })
+        .catch(error => {
+          console.log(`${repo.name} 的 README 获取失败:`, error);
+        });
+    });
+  })
+  .catch(error => {
+    console.error("获取仓库列表失败:", error);
+  });
+</script>
+
+<style>
+.project-card {
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.project-card h3 {
+  margin-top: 0;
+}
+
+.readme-content {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f6f8fa;
+}
+</style>

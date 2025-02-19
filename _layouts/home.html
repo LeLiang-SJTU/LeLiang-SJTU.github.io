@@ -1,78 +1,331 @@
 ---
+layout: default
+---
 
-<!-- 主要内容 -->
-<main class="transition-all duration-300" :class="{ 'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen }">
-<div class="pt-16">
-    <!-- 轮播图 -->
-    <div class="relative h-96 bg-gray-900">
-        <template x-for="(slide, index) in slides" :key="index">
-            <div class="absolute inset-0 transition-opacity duration-500"
-                    :class="{ 'opacity-100': currentSlide === index, 'opacity-0': currentSlide !== index }">
-                <div class="absolute inset-0" :class="slide.bg" style="opacity: 0.9"></div>
-                <div class="absolute inset-0 flex items-center justify-center text-center">
-                    <div class="max-w-2xl px-4">
-                        <h2 class="text-4xl font-bold text-white mb-4" x-text="slide.title"></h2>
-                        <p class="text-xl text-gray-200" x-text="slide.desc"></p>
-                    </div>
+
+<section class="carousel-container">
+  
+    <div class="carousel">
+
+   
+ 
+        <button class="carousel-button prev">&#10094;</button>
+        <div class="carousel-track">
+            {% assign all_posts = '' | split: '' %}
+            {% for collection in site.collections %}
+                {% assign all_posts = all_posts | concat: collection.docs %}
+            {% endfor %}
+            
+            {% assign sorted_posts = all_posts | sort: 'date' | reverse | limit: 5 %}
+            
+            {% for post in sorted_posts %}
+            <div class="carousel-slide" onclick="window.location.href='{{ post.url }}'">
+                <div class="carousel-image" style="background-color: #{% for i in (1..6) %}{{ '0123456789ABCDEF' | split: '' | sample }}{% endfor %}">
+                    {% if post.background_image %}
+                        <img src="{{ post.background_image }}" alt="{{ post.title }}">
+                    {% elsif post.content contains '<img' %}
+                        {% assign images = post.content | split: '<img ' %}
+                        {% assign image_path = images[1] | split: 'src="' | last | split: '"' | first %}
+                        <img src="{{ image_path }}" alt="{{ post.title }}">
+                    {% endif %}
+                </div>
+                <div class="carousel-content">
+                    <span class="post-category">{{ post.collection }}</span>
+                    <h3>{{ post.title }}</h3>
+                    {% if post.excerpt %}
+                        <p>{{ post.excerpt | strip_html | truncate: 100 }}</p>
+                    {% endif %}
                 </div>
             </div>
-        </template>
-    </div>
-
-    <!-- 最新文章 -->
-    <div class="container mx-auto px-6 py-12">
-        <h2 class="text-3xl font-bold text-gray-800 mb-8">最新文章</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- 文章卡片 1 -->
-            <article class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:-translate-y-1">
-                <div class="h-48 bg-gradient-to-r from-blue-500 to-purple-500"></div>
-                <div class="p-6">
-                    <div class="text-sm text-blue-600 mb-2">Web开发</div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">
-                        现代前端开发的趋势与挑战
-                    </h3>
-                    <p class="text-gray-600 mb-4">探讨当前前端开发领域的最新趋势，以及开发者面临的主要挑战与解决方案...</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">2024-01-10</span>
-                        <a href="#" class="text-blue-600 hover:text-blue-800">阅读更多</a>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 文章卡片 2 -->
-            <article class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:-translate-y-1">
-                <div class="h-48 bg-gradient-to-r from-green-500 to-blue-500"></div>
-                <div class="p-6">
-                    <div class="text-sm text-green-600 mb-2">人工智能</div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">
-                        深度学习在图像识别中的应用
-                    </h3>
-                    <p class="text-gray-600 mb-4">深入探讨深度学习技术如何改变图像识别领域，以及其在实际应用中的表现...</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">2024-01-09</span>
-                        <a href="#" class="text-green-600 hover:text-green-800">阅读更多</a>
-                    </div>
-                </div>
-            </article>
-
-            <!-- 文章卡片 3 -->
-            <article class="bg-white rounded-lg shadow-lg overflow-hidden transform transition-transform duration-300 hover:-translate-y-1">
-                <div class="h-48 bg-gradient-to-r from-purple-500 to-pink-500"></div>
-                <div class="p-6">
-                    <div class="text-sm text-purple-600 mb-2">读书笔记</div>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-3">
-                        《架构整洁之道》读后感
-                    </h3>
-                    <p class="text-gray-600 mb-4">分享阅读《架构整洁之道》的心得体会，以及如何将书中的理念应用到实际工作中...</p>
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">2024-01-08</span>
-                        <a href="#" class="text-purple-600 hover:text-purple-800">阅读更多</a>
-                    </div>
-                </div>
-            </article>
+            {% endfor %}
         </div>
+        <button class="carousel-button next">&#10095;</button>
     </div>
-</div>
+</section>
+{% for collection in site.collections %} 
+<section class="category" id="{{ collection.label }}-section">
+    <h3>{{ collection.label }}</h3>
+    {% assign first_post = collection.docs | first %}
+    {% if first_post %}
+    <div class="single-post" onclick="window.location.href='{{ first_post.url }}'">
+        <div class="post-header">
+            <h4>{{ first_post.title }}</h4>
+            <div class="post-meta">
+                <span class="post-date">{{ first_post.date | date: "%Y-%m-%d" }}</span>
+            </div>
+        </div>
+        <div class="post-divider"></div>
+        {% if first_post.excerpt %}
+            <p>{{ first_post.excerpt }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="all-posts" style="display: none;">
+        {% for post in collection.docs %}
+        <div class="post-item" onclick="window.location.href='{{ post.url }}'">
+            <div class="post-header">
+                <h4>{{ post.title }}</h4>
+                <div class="post-meta">
+                    <span class="post-date">{{ post.date | date: "%Y-%m-%d" }}</span>
+                </div>
+            </div>
+            <div class="post-divider"></div>
+            {% if post.excerpt %}
+                <p>{{ post.excerpt }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="#" class="toggle-posts" data-collection="{{ collection.label }}">查看更多...</a>
+</section>
+{% endfor %}
+
+<style>
+.carousel-container {
+    max-width: 1200px;
+    margin: 2em auto;
+}
+.carousel {
+    position: relative;
+    overflow: hidden;
+}
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+.carousel-slide {
+    flex: 0 0 100%;
+    position: relative;
+    height: 400px;
+}
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.carousel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.carousel-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2em;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+    color: white;
+}
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.5);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 2;
+}
+.prev { left: 10px; }
+.next { right: 10px; }
+.post-category {
+    background: rgba(255,255,255,0.9);
+    color: #333;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.category {
+    max-width: 1200px;  /* 增加最大宽度 */
+    margin: 3em auto;
+    position: relative;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.category h3 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 1.5em;
+    color: #333;
+    position: relative;
+}
+
+.category h3:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #007bff;
+}
+
+.toggle-posts {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-decoration: none;
+    color: #007bff;
+    font-size: 0.9em;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background: rgba(0,123,255,0.1);
+    transition: all 0.3s ease;
+}
+
+.toggle-posts:hover {
+    color: #0056b3;
+    background: rgba(0,123,255,0.2);
+}
+
+.post-item {
+    background: rgb(246, 248, 225);
+  border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.post-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(230, 161, 161, 0.715)
+}
+
+.post-item h4 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.1em;  /* 调小字体 */
+}
+
+.post-item p {
+    color: #505f6f;
+    font-size: 0.95em;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.post-header h4 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.1em;  /* 统一设置为相同大小 */
+}
+
+.post-meta {
+    font-size: 0.85em;
+    color: #7f8c8d;
+}
+
+.post-date {
+    padding: 3px 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.post-divider {
+    height: 1px;
+    background: linear-gradient(to right, #e0e0e0, #f5f5f5);
+    margin: 10px 0 15px 0;
+}
+
+.single-post {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.single-post:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(65, 211, 196, 0.621);
+}
+
+.single-post h4 {
+    font-size: 1.1em;  /* 使单个文章标题字体与列表一致 */
+    color: #040404;
+    margin-bottom: 10px;
+}
+
+.single-post p {
+    color: #888885;
+    font-size: 0.95em;
+    line-height: 1.7;
+    margin: 0;
+}
+</style>
 
 
-</main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggles = document.querySelectorAll('.toggle-posts');
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            const section = document.getElementById(`${this.dataset.collection}-section`);
+            const allPosts = section.querySelector('.all-posts');
+            const singlePost = section.querySelector('.single-post');
+            
+            if (allPosts.style.display === 'none') {
+                allPosts.style.display = 'block';
+                singlePost.style.display = 'none';
+                this.textContent = '点击收起=。=';
+                this.style.backgroundColor = '#f8d7da';
+            } else {
+                allPosts.style.display = 'none';
+                singlePost.style.display = 'block';
+                this.textContent = '查看更多...';
+                this.style.backgroundColor = 'rgba(0,123,255,0.1)';
+            }
+        });
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    const track = document.querySelector('.carousel-track');
+    const slides = document.querySelectorAll('.carousel-slide');
+    const prevButton = document.querySelector('.carousel-button.prev');
+    const nextButton = document.querySelector('.carousel-button.next');
+    let currentSlide = 0;
+
+    function moveToSlide(index) {
+        track.style.transform = `translateX(-${index * 100}%)`;
+        currentSlide = index;
+    }
+
+    prevButton.addEventListener('click', () => {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        moveToSlide(currentSlide);
+    });
+
+    nextButton.addEventListener('click', () => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        moveToSlide(currentSlide);
+    });
+
+    // Auto advance slides every 5 seconds
+    setInterval(() => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        moveToSlide(currentSlide);
+    }, 5000);
+});
+</script>

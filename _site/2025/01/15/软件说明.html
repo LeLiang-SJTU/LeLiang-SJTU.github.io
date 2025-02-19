@@ -1,13 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>软件说明 - L先生的博客</title>
+    <title>My Post - Lo先生的博客</title>
     <meta name="description" content="L先生的博客,一个有趣而精彩的地方。">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/2.3.0/alpine.js" defer></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+   
+    <link rel="stylesheet" href="/assets/css/search.css">
     <link rel="stylesheet" href="/assets/css/markdown.css">
+    <link rel="stylesheet" href="/assets/css/home.css">
+  
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
@@ -19,114 +22,924 @@
     </script>
 
 </head>
-
-<body class="bg-gray-50">
-
-    <div x-data="{ 
-        isNavOpen: true,
-        isSidebarOpen: true,
-        currentSlide: 0,
-        nextSlide() {
-            this.currentSlide = (this.currentSlide + 1) % this.slides.length;
-        }
-    }"
-    x-init="setInterval(() => nextSlide(), 5000)">
-         <!-- 导航栏 -->
-         <!-- 导航栏 -->
-<nav class="fixed w-full bg-white shadow-lg transition-all duration-300 z-50">
-    <div class="container mx-auto px-6">
-        <div class="flex justify-between items-center h-16">
-            <div class="flex items-center space-x-8">
-                <button @click="isSidebarOpen = !isSidebarOpen" 
-                        class="text-gray-600 hover:text-gray-900">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
-                <a href="/" class="text-2xl font-bold text-gray-800">洛洛的生活记录</a>
-            </div>
-            <div class="hidden md:flex space-x-8">
-
-                
-                <a href="/" class="text-gray-600 hover:text-gray-900 font-medium" >   首页</a> 
-                
-                <a href="/tech" class="text-gray-600 hover:text-gray-900 font-medium" >   技术</a> 
-                
-                <a href="/life" class="text-gray-600 hover:text-gray-900 font-medium" >   生活</a> 
-                
-                <a href="/life" class="text-gray-600 hover:text-gray-900 font-medium" >   其他</a> 
-                
-                <a href="/about" class="text-gray-600 hover:text-gray-900 font-medium" >   关于</a> 
-                
-            </div>
-        </div>
+<body>
+    <!-- 导航栏 -->
+    <!-- 导航栏 -->
+<nav class="navbar">
+    <div class="navbar-left">
+        <button class="toggle-sidebar">☰</button>
+        <a href="/" class="BlogTitle">
+            <img src="/assets/images/avatar.png" alt="头像" class="avatar">
+            洛洛
+        </a>
+    </div>
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="搜索 🔍">
+        <div class="search-results"></div>
+    </div>
+    <div class="navbar-links">
+        
+        <a href="/" class="navbar-item" >
+            首页
+        </a> 
+        
+        <a href="/tech" class="navbar-item" >
+            技术
+        </a> 
+        
+        <a href="/life" class="navbar-item" >
+            生活
+        </a> 
+        
+        <a href="/githubs" class="navbar-item" >
+            GIthub项目
+        </a> 
+        
+        <a href="/about" class="navbar-item" >
+            关于
+        </a> 
+        
+        <a class="AppHeader-logo ml-1" href="https://github.com/LeLiang-SJTU" >
+            <svg height="20" aria-hidden="true" viewBox="0 0 24 24" version="1.1" width="32" data-view-component="true" class="octicon octicon-mark-github v-align-middle">
+                <path d="M12.5.75C6.146.75 1 5.896 1 12.25c0 5.089 3.292 9.387 7.863 10.91.575.101.79-.244.79-.546 0-.273-.014-1.178-.014-2.142-2.889.532-3.636-.704-3.866-1.35-.13-.331-.69-1.352-1.18-1.625-.402-.216-.977-.748-.014-.762.906-.014 1.553.834 1.769 1.179 1.035 1.74 2.688 1.25 3.349.948.1-.747.402-1.25.733-1.538-2.559-.287-5.232-1.279-5.232-5.678 0-1.25.445-2.285 1.178-3.09-.115-.288-.517-1.467.115-3.048 0 0 .963-.302 3.163 1.179.92-.259 1.897-.388 2.875-.388.977 0 1.955.13 2.875.388 2.2-1.495 3.162-1.179 3.162-1.179.633 1.581.23 2.76.115 3.048.733.805 1.179 1.825 1.179 3.09 0 4.413-2.688 5.39-5.247 5.678.417.36.776 1.05.776 2.128 0 1.538-.014 2.774-.014 3.162 0 .302.216.662.79.547C20.709 21.637 24 17.324 24 12.25 24 5.896 18.854.75 12.5.75Z"></path>
+            </svg>GitHub
+          </a>
     </div>
 </nav>
+
+<style>
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 2rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    width: 250px; /* 与侧边栏宽度相同 */
+}
+
+.toggle-sidebar {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+    color: #333;
+}
+
+.BlogTitle {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.search-container {
+    position: relative;
+    flex: 0 1 300px;
+    margin: 0 2rem;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    padding-right: 2.5rem;  /* 为emoji留出空间 */
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.search-results {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1001;
+    margin-top: 5px;
+}
+
+.search-result-item {
+    display: block;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.2s;
+}
+
+.search-result-item:hover {
+    background-color: #f5f5f5;
+}
+
+.search-result-item h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: #007bff;
+}
+
+.search-result-item .date {
+    color: #666;
+    font-size: 0.8rem;
+    margin: 0 0 0.5rem 0;
+}
+
+.search-result-item .excerpt {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 搜索结果高亮样式 */
+.search-result-item mark {
+    background-color: #fff3cd;
+    padding: 0.2em 0;
+    border-radius: 2px;
+    color: #856404;
+    font-weight: 500;
+}
+
+.no-results {
+    padding: 1rem;
+    text-align: center;
+    color: #666;
+}
+
+.navbar-links {
+    margin-left: auto;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.navbar-item {
+    text-decoration: none;
+    color: #050505;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0.5rem 0.8rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.navbar-item:hover {
+    color: #007bff;
+    background-color: rgba(0,123,255,0.1);
+}
+
+.navbar-item.active {
+    color: #007bff;
+    font-weight: 500;
+    background-color: rgba(0,123,255,0.1);
+}
+
+.search-match {
+    margin: 0.5rem 0;
+    border-left: 3px solid #007bff;
+    padding-left: 1rem;
+}
+
+.match-count {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+.current-highlight {
+    background-color: #ffd700 !important;
+    transition: background-color 0.3s ease;
+}
+
+.match-heading {
+    color: #007bff;
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+.search-highlight {
+    background-color: #fff3cd;
+    padding: 0.2em 0;
+    border-radius: 2px;
+    color: #856404;
+    font-weight: 500;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0.8rem 1rem;
+    }
+    
+    .search-container {
+        display: none;
+    }
+    
+    .navbar-left {
+        width: auto;
+    }
+    
+    .navbar-links {
+        gap: 0.5rem;
+    }
+    
+    .BlogTitle {
+        font-size: 1rem;
+    }
+    
+    .avatar {
+        width: 25px;
+        height: 25px;
+    }
+}
+</style>
+
+<script src="/assets/js/search.js"></script>
+
+
+
+
+    <div class="main-container">
+        <!-- 侧边栏 -->
+        <!-- 侧边栏 -->
+<aside class="sidebar">
+  <!-- Sidebar Tabs -->
+  <div class="sidebar-tabs">
+    <button class="sidebar-tab active" data-tab="nav">导航</button>
+    <button class="sidebar-tab" data-tab="tags">标签</button>
+    
+    <button class="sidebar-tab" data-tab="toc">目录</button>
+    
+  </div>
+
+  <!-- Sidebar Content -->
+  <div class="sidebar-content" id="sidebar-content">
+    <!-- Navigation Content -->
+    <div class="tab-content active" id="nav-content">
+      <div class="hierarchy-nav">
         
-         <!-- 侧边栏 -->
-         <!-- 侧边栏 -->
-<div class="fixed inset-y-0 left-0 transform transition-transform duration-300 z-30"
-        :class="{ 'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen }">
-        <div class="w-64 h-full bg-white shadow-lg pt-20">
-            <div class="px-4 py-2">
-                  
-                <div class="mb-8">  
-                    <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">books</h3>  
-                      
-                    <div class="space-y-2">  
-                      <a href="/books/2025-01-10-%E6%88%91%E7%9A%84%E4%B8%BB%E9%A1%B5/"   
-                         class="block text-gray-700 hover:text-blue-600 ">  
-                        我的主页  
-                      </a>  
-                    </div>  
-                    
-                </div>  
-                  
-                <div class="mb-8">  
-                    <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">posts</h3>  
-                      
-                    <div class="space-y-2">  
-                      <a href="/2025/01/15/%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E.html"   
-                         class="block text-gray-700 hover:text-blue-600 active">  
-                        软件说明  
-                      </a>  
-                    </div>  
-                    
-                </div>  
-                  
-                <div class="mb-8">  
-                    <h3 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">projects</h3>  
-                    
-                </div>  
-                
-         
+            
+          <div class="collection-group">  
+            <div class="collection-title">
+                <a href="/#books-section" class="title-text">💠books</a>
+                <span class="arrow"></span>
             </div>
-        </div>       
-</div>
- 
-         <!-- 主要内容 -->
-         <main class="transition-all duration-300 pt-16" :class="{ 'ml-64': isSidebarOpen, 'ml-0': !isSidebarOpen }">
-                <!-- 主题切换按钮和菜单 -->
- <div class="theme-switcher">
-    <button class="theme-button" onclick="toggleThemeMenu()">🎨</button>
-    <div class="theme-menu" id="themeMenu">
-        <div class="theme-option" onclick="changeTheme('github')">GitHub主题</div>
-        <div class="theme-option" onclick="changeTheme('dark')">暗色主题</div>
-        <div class="theme-option" onclick="changeTheme('green')">护眼主题</div>
-        <div class="theme-option" onclick="changeTheme('typora')">typora主题</div>
-        <div class="theme-option" onclick="changeTheme('gallery')">美化主题</div>
+            <div class="collection-items">
+                
+              <a href="/books/2025-01-10-%E6%88%91%E7%9A%84%E4%B8%BB%E9%A1%B5/"   
+                 class="collection-item ">  
+                我的主页  
+              </a>  
+              
+            </div>
+          </div>  
+            
+          <div class="collection-group">  
+            <div class="collection-title">
+                <a href="/#posts-section" class="title-text">💠posts</a>
+                <span class="arrow"></span>
+            </div>
+            <div class="collection-items">
+                
+              <a href="/2025/01/15/%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E.html"   
+                 class="collection-item active">  
+                My Post  
+              </a>  
+              
+            </div>
+          </div>  
+          
+        
+      </div>
     </div>
+
+    <!-- Tags Content -->
+    <div class="tab-content" id="tags-content">
+      <div class="tags-wrapper">
+        
+        
+        
+        
+        
+        
+          
+          
+          
+          <a href="/#tag-jekyll" class="tag-item" data-tag="Jekyll">
+            Jekyll
+            <span class="tag-count">1</span>
+          </a>
+        
+          
+          
+          
+          <a href="/#tag-教程" class="tag-item" data-tag="教程">
+            教程
+            <span class="tag-count">1</span>
+          </a>
+        
+      </div>
+    </div>
+
+    <!-- TOC Content -->
+    
+    <div class="tab-content" id="toc-content">
+      <div id="toc" class="toc-container">    
+  
 </div>
+    </div>
+    
+  </div>
+</aside>
 
-<article class="bg-white rounded-lg shadow-md p-6">
-    <h1 class="text-3xl font-bold mb-4">软件说明</h1>
-    <div class="text-gray-500 mb-6">2025-01-15</div>
+<style>
+ :root {
+  --sidebar-width: 280px;
+  --primary-color: #2563eb;
+  --text-color: #64748b;
+  --border-color: rgba(0, 0, 0, 0.1);
+}
 
-    <!-- Markdown 内容容器 -->
+/* Sidebar Base */
+.sidebar {
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    width: 250px;
+    height: calc(100vh - var(--nav-height));
+    background: white;
+    padding: 1.5rem;
+    overflow-y: auto;
+    border-right: 1px solid #eaeaea;
+    transition: transform 0.3s ease;
+}
+
+.sidebar.hidden {
+    transform: translateX(-100%);
+}
+
+.sidebar-tabs {
+    display: flex;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.sidebar-tab {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border: none;
+    background: none;
+    flex: 1;
+    color: #64748b; /* Default color matching other text */
+    transition: all 0.2s ease;
+}
+
+.sidebar-tab.active {
+    border-bottom: 2px solid #2563eb; /* Change from #4CAF50 to primary blue */
+    color: #2563eb; /* Change from #4CAF50 to primary blue */
+}
+
+.sidebar-tab:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.04);
+}
+/* Tab Content */
+.tab-content {
+  display: none;
+  padding: 1.5rem 0;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Navigation Styles */
+.hierarchy-nav {
+  padding: 0 1.5rem;
+}
+
+/* Collection Styles */
+.collection-group {
+  margin-bottom: 2rem;
+}
+
+.collection-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155; /* 更深的颜色用于标题 */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0.25rem 0;
+    transition: color 0.2s ease;
+    user-select: none; /* 禁用文字选择 */
+}
+
+.collection-title:hover {
+    color: #1d4ed8; /* 悬停时的颜色 */
+}
+
+.collection-item {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
+    color: #64748b; /* 更浅的颜色用于文章标题 */
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    border-left: 2px solid transparent;
+}
+
+.collection-item:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.04);
+}
+
+.collection-item.active {
+    color: #2563eb;
+    font-weight: 500;
+    background: rgba(37, 99, 235, 0.06);
+    border-left: 2px solid #2563eb;
+}
+
+/* Collection items visibility states */
+.collection-items {
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  max-height: 0;
+}
+
+.collection-items.expanded {
+  max-height: 1000px; /* 或者更大的值，取决于内容高度 */
+}
+
+.collection-items.collapsed {
+  max-height: 0;
+}
+
+/* Add arrow indicator to collection title */
+.collection-title .arrow {
+    display: inline-block;
+    width: 0.4rem;
+    height: 0.4rem;
+    margin-left: 0.5rem;
+    border-right: 2px solid #94a3b8;
+    border-bottom: 2px solid #94a3b8;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.collection-group:has(.collection-items.collapsed) .arrow {
+    transform: rotate(-135deg);
+}
+
+/* 移除原来的::after伪元素样式 */
+.collection-title::after {
+    content: none;
+}
+
+.collection-title .title-text {
+    flex: 1;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* TOC Styles */
+#toc-content {
+    padding: 1rem 1.5rem;
+}
+
+#toc-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#toc-content ul li {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+#toc-content ul li a {
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: block;
+    padding: 0.3rem 0.5rem;
+    border-radius: 0.25rem;
+    border-left: 2px solid transparent;
+}
+
+#toc-content ul li a:hover {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.04);
+}
+
+#toc-content ul li a.active {
+    color: #2563eb;
+    background: rgba(37, 99, 235, 0.06);
+    border-left: 2px solid #2563eb;
+}
+
+/* 目录层级缩进 */
+#toc-content ul ul {
+    margin-left: 1rem;
+    margin-top: 0.25rem;
+}
+
+#toc-content ul ul li {
+    margin-bottom: 0.25rem;
+}
+
+#toc-content ul ul li a {
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+
+/* TOC Styles Update */
+#toc-content ul li.has-children > a {
+    padding-right: 1.5rem;
+    position: relative;
+    cursor: pointer;
+}
+
+#toc-content ul li.has-children > a::after {
+    content: '';
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-right: 2px solid #94a3b8;
+    border-bottom: 2px solid #94a3b8;
+    transform: translateY(-70%) rotate(45deg);
+    transition: transform 0.2s ease;
+}
+
+#toc-content ul li.has-children.expanded > a::after {
+    transform: translateY(-30%) rotate(-135deg);
+}
+
+#toc-content ul ul {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+#toc-content ul li.expanded > ul {
+    height: auto;
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+/* Empty State Styles */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.empty-icon {
+  margin-bottom: 1rem;
+  color: #cbd5e1;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Tags Styles */
+.tags-wrapper {
+  padding: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-item {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.tag-item:hover {
+  background: #e2e8f0;
+  color: #2563eb;
+}
+
+.tag-count {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  background: #e2e8f0;
+  padding: 0.125rem 0.375rem;
+  border-radius: 9999px;
+}
 
 
-    <div class="markdown-theme-github">
-        <h1 id="ai-图像生成助手">AI 图像生成助手</h1>
+.tag-item.active {
+  background: #2563eb;
+  color: white;
+}
+
+.tag-item.active .tag-count {
+  background: rgba(255, 255, 255, 0.2);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const tabs = document.querySelectorAll('.sidebar-tab');
+  
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Remove active class from all tabs
+      tabs.forEach(t => t.classList.remove('active'));
+      
+      // Hide all content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Show selected content
+      const tabName = tab.getAttribute('data-tab');
+      document.getElementById(`${tabName}-content`).classList.add('active');
+      
+      // Add active class to clicked tab
+      tab.classList.add('active');
+    });
+  });
+
+  // 添加目录滚动监听
+  if (document.querySelector('#toc-content')) {
+    const tocLinks = document.querySelectorAll('#toc-content a');
+    const observerOptions = {
+        rootMargin: '-60px 0px -80% 0px',
+        threshold: 0
+    };
+
+    const headingsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const id = entry.target.getAttribute('id');
+            const tocLink = document.querySelector(`#toc-content a[href="#${id}"]`);
+            
+            if (tocLink) {
+                if (entry.isIntersecting) {
+                    tocLinks.forEach(link => link.classList.remove('active'));
+                    tocLink.classList.add('active');
+                }
+            }
+        });
+    }, observerOptions);
+
+    // 观察所有标题元素
+    document.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]').forEach((heading) => {
+        headingsObserver.observe(heading);
+    });
+  }
+
+  // Replace the existing TOC initialization code
+  if (document.querySelector('#toc-content')) {
+    const tocItems = document.querySelectorAll('#toc-content ul li');
+    let clickTimer = null;
+    
+    tocItems.forEach(item => {
+        const subList = item.querySelector('ul');
+        const link = item.querySelector('a');
+        
+        if (subList) {
+            item.classList.add('has-children');
+            const level = getItemLevel(item);
+            
+            // 默认展开到二级目录
+            if (level <= 2) {
+                item.classList.add('expanded');
+                subList.style.height = 'auto';
+            } else {
+                item.classList.add('collapsed');
+            }
+
+            // 处理点击事件
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (clickTimer) {
+                    // 双击：切换折叠状态
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
+                    item.classList.toggle('collapsed');
+                    item.classList.toggle('expanded');
+                    if (item.classList.contains('expanded')) {
+                        subList.style.height = 'auto';
+                    } else {
+                        subList.style.height = '0';
+                    }
+                } else {
+                    // 单击：导航到位置
+                    clickTimer = setTimeout(() => {
+                        clickTimer = null;
+                        const href = link.getAttribute('href');
+                        if (href) {
+                            const target = document.querySelector(href);
+                            if (target) {
+                                target.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        }
+                    }, 200);
+                }
+            });
+        }
+    });
+
+    // 获取目录项层级的辅助函数
+    function getItemLevel(item) {
+        let level = 1;
+        let parent = item.parentElement;
+        while (parent && parent.tagName === 'UL') {
+            level++;
+            parent = parent.parentElement.closest('ul');
+        }
+        return level;
+    }
+
+    // 确保当前活动项可见
+    function expandActiveParents() {
+        const activeLink = document.querySelector('#toc-content a.active');
+        if (activeLink) {
+            let parent = activeLink.parentElement;
+            while (parent && parent.tagName === 'LI') {
+                parent.classList.remove('collapsed');
+                parent.classList.add('expanded');
+                const subList = parent.querySelector('ul');
+                if (subList) {
+                    subList.style.height = 'auto';
+                }
+                parent = parent.parentElement.closest('li');
+            }
+        }
+    }
+
+    // 初始化时展开当前项的父级
+    window.addEventListener('load', expandActiveParents);
+  }
+
+  // Collection group click handling
+  const collectionGroups = document.querySelectorAll('.collection-group');
+
+  collectionGroups.forEach(group => {
+    const title = group.querySelector('.collection-title');
+    const titleText = group.querySelector('.title-text');
+    const arrow = group.querySelector('.arrow');
+    const items = group.querySelector('.collection-items');
+    let clickTimer = null;
+    
+    // Add initial state
+    items.classList.add('collapsed');
+    
+    // Arrow click handler
+    arrow.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleCollectionItems(items);
+    });
+    
+    // Title text click handler
+    titleText.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      if (clickTimer) {
+        // Double click - toggle expand/collapse
+        clearTimeout(clickTimer);
+        clickTimer = null;
+        toggleCollectionItems(items);
+      } else {
+        // Single click - navigate
+        clickTimer = setTimeout(() => {
+          clickTimer = null;
+          const href = titleText.getAttribute('href');
+          if (href) {
+            window.location.href = href;
+          }
+        }, 200);
+      }
+    });
+  });
+
+  // Helper function to toggle collection items
+  function toggleCollectionItems(items) {
+    if (items.classList.contains('collapsed')) {
+      items.classList.remove('collapsed');
+      items.classList.add('expanded');
+      items.style.maxHeight = `${items.scrollHeight}px`;
+    } else {
+      items.classList.remove('expanded');
+      items.classList.add('collapsed');
+      items.style.maxHeight = '0';
+    }
+  }
+});
+</script>
+
+
+        <main class="content">
+            <body>
+    <div class="theme-switcher">
+        <button class="theme-button"></button>
+        <div class="theme-menu" id="themeMenu">
+            <div class="theme-option" data-theme="github">GitHub主题</div>
+            <div class="theme-option" data-theme="dark">暗色主题</div>
+            <div class="theme-option" data-theme="green">护眼主题</div>
+            <div class="theme-option" data-theme="typora">typora主题</div>
+            <div class="theme-option" data-theme="gallery">美化主题</div>
+        </div>
+    </div>
+
+    <article class="article">
+        <h1 class="article-title">My Post</h1>
+        <div class="article-title">2025-01-15</div>
+        
+        <div class="article-tags">
+            标签：教程, Jekyll
+        </div>
+        
+        <div class="markdown-theme-github"><h1 id="ai-图像生成助手">AI 图像生成助手</h1>
 
 <h2 id="核心功能">核心功能</h2>
 
@@ -277,56 +1090,104 @@
 
 <p><img src="https://img-s-msn-com.akamaized.net/tenant/amp/entityid/BB1msOOV.img" alt="首页" /></p>
 
+</div>
+    </article>
 
-    </div>
-</article>
+    <script>
+        // 主要变量定义
+        const article = document.querySelector('article');
+        const themeMenu = document.getElementById('themeMenu');
+        const themeButton = document.querySelector('.theme-button');
+        const markdownContainer = document.querySelector('[class^="markdown-theme"]');
+        let isWideScreen = localStorage.getItem('content-width') === 'wide';
 
+        // 工具函数
+        const setArticleWidth = (isWide) => {
+            const baseClasses = 'bg-white rounded-lg shadow-md p-6';
+            article.className = `${baseClasses} content-${isWide ? 'wide' : 'narrow'}`;
+            localStorage.setItem('content-width', isWide ? 'wide' : 'narrow');
+        };
 
-<script>
-    // 主题切换功能
-    function changeTheme(theme) {
-        const container = document.querySelector('[class^="markdown-theme"]');
-        container.className = `markdown-theme-${theme}`;
-        // 保存主题选择到 localStorage
-        localStorage.setItem('preferred-theme', theme);
-        // 关闭主题菜单
-        toggleThemeMenu();
-    }
+        const changeTheme = (theme) => {
+            markdownContainer.className = `markdown-theme-${theme}`;
+            localStorage.setItem('preferred-theme', theme);
+            themeMenu.classList.remove('active');
+        };
 
-    // 切换主题菜单显示/隐藏
-    function toggleThemeMenu() {
-        const menu = document.getElementById('themeMenu');
-        menu.classList.toggle('active');
-    }
+        // 事件监听设置
+        let clickTimer = null;
 
-    // 点击其他地方关闭主题菜单
-    document.addEventListener('click', function(event) {
-        const switcher = document.querySelector('.theme-switcher');
-        const isClickInside = switcher.contains(event.target);
-        
-        if (!isClickInside) {
-            const menu = document.getElementById('themeMenu');
-            menu.classList.remove('active');
-        }
-    });
+        themeButton.addEventListener('click', (e) => {
+            if (e.detail === 1) {
+                clickTimer = setTimeout(() => {
+                    themeMenu.classList.toggle('active');
+                    e.stopPropagation();
+                }, 200); // 200ms 延迟，等待可能的双击事件
+            }
+        });
 
-    // 页面加载时恢复之前选择的主题
-    document.addEventListener('DOMContentLoaded', function() {
-        // 确保主题菜单初始状态为关闭
-        const menu = document.getElementById('themeMenu');
-        menu.classList.remove('active');  // 显式移除 active 类
-        
-        // 恢复之前选择的主题
-        const savedTheme = localStorage.getItem('preferred-theme');
-        if (savedTheme) {
-            changeTheme(savedTheme);
-        }
-    });
-</script>
+        themeButton.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            clearTimeout(clickTimer); // 清除单击事件的计时器
+            themeMenu.classList.remove('active');
+            isWideScreen = !isWideScreen;
+            setArticleWidth(isWideScreen);
+        });
 
+        document.addEventListener('click', (e) => {
+            if (!document.querySelector('.theme-switcher').contains(e.target)) {
+                themeMenu.classList.remove('active');
+            }
+        });
 
+        // 主题选项事件委托
+        document.querySelector('.theme-menu').addEventListener('click', (e) => {
+            const themeOption = e.target.closest('.theme-option');
+            if (themeOption) {
+                changeTheme(themeOption.dataset.theme);
+            }
+        });
 
+        // 页面加载时恢复之前选择的主题和宽度
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('preferred-theme');
+            if (savedTheme) {
+                changeTheme(savedTheme);
+            }
 
-         </main>
-    </div>
+            setArticleWidth(isWideScreen);
+
+            themeMenu.classList.remove('active');
+        });
+    </script>
+    <script src="/assets/js/highlight-search.js"></script>
 </body>
+
+
+
+
+ 
+        </main>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        const toggleButton = document.querySelector('.toggle-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+        
+        toggleButton.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+        });
+
+        // Switch sidebar tabs
+        const tabs = document.querySelectorAll('.sidebar-tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

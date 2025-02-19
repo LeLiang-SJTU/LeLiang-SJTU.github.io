@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog - Lo先生的博客</title>
+    <title>Projects - Lo先生的博客</title>
     <meta name="description" content="L先生的博客,一个有趣而精彩的地方。">
    
     <link rel="stylesheet" href="/assets/css/search.css">
@@ -317,6 +317,8 @@
     <button class="sidebar-tab active" data-tab="nav">导航</button>
     <button class="sidebar-tab" data-tab="tags">标签</button>
     
+    <button class="sidebar-tab" data-tab="toc">目录</button>
+    
   </div>
 
   <!-- Sidebar Content -->
@@ -389,6 +391,12 @@
     </div>
 
     <!-- TOC Content -->
+    
+    <div class="tab-content" id="toc-content">
+      <div id="toc" class="toc-container">    
+  
+</div>
+    </div>
     
   </div>
 </aside>
@@ -911,385 +919,164 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         <main class="content">
-            <section class="carousel-container">
-  
-    <div class="carousel">
-
-   
- 
-        <button class="carousel-button prev">&#10094;</button>
-        <div class="carousel-track">
-            
-            
-            
-            
-            
-            
-            <div class="carousel-slide" onclick="window.location.href='/2025/01/15/%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E.html'">
-                <div class="carousel-image" style="background-color: #E6A4C7">
-                    
-                        
-                        
-                        <img src="https://img-s-msn-com.akamaized.net/tenant/amp/entityid/BB1msOOV.img" alt="My Post">
-                    
-                </div>
-                <div class="carousel-content">
-                    <span class="post-category">posts</span>
-                    <h3>My Post</h3>
-                    
-                        <p>AI 图像生成助手
-</p>
-                    
-                </div>
-            </div>
-            
-            <div class="carousel-slide" onclick="window.location.href='/books/2025-01-10-%E6%88%91%E7%9A%84%E4%B8%BB%E9%A1%B5/'">
-                <div class="carousel-image" style="background-color: #4C2819">
-                    
-                </div>
-                <div class="carousel-content">
-                    <span class="post-category">books</span>
-                    <h3>我的主页</h3>
-                    
-                        <p>Markdown 是一种轻量级的标记语言，常用于格式化文本。它简单易学，广泛应用于文档编写、博客、论坛等场景。以下是 Markdown 的所有基本语法说明：
-</p>
-                    
-                </div>
-            </div>
-            
+            <body>
+    <div class="theme-switcher">
+        <button class="theme-button"></button>
+        <div class="theme-menu" id="themeMenu">
+            <div class="theme-option" data-theme="github">GitHub主题</div>
+            <div class="theme-option" data-theme="dark">暗色主题</div>
+            <div class="theme-option" data-theme="green">护眼主题</div>
+            <div class="theme-option" data-theme="typora">typora主题</div>
+            <div class="theme-option" data-theme="gallery">美化主题</div>
         </div>
-        <button class="carousel-button next">&#10095;</button>
-    </div>
-</section>
- 
-<section class="category" id="books-section">
-    <h3>books</h3>
-    
-    
-    <div class="single-post" onclick="window.location.href='/books/2025-01-10-%E6%88%91%E7%9A%84%E4%B8%BB%E9%A1%B5/'">
-        <div class="post-header">
-            <h4>我的主页</h4>
-            <div class="post-meta">
-                <span class="post-date">2025-01-10</span>
-            </div>
-        </div>
-        <div class="post-divider"></div>
-        
-            <p><p>Markdown 是一种轻量级的标记语言，常用于格式化文本。它简单易学，广泛应用于文档编写、博客、论坛等场景。以下是 Markdown 的所有基本语法说明：</p>
-</p>
-        
-    </div>
-    
-
-    <div class="all-posts" style="display: none;">
-        
-        <div class="post-item" onclick="window.location.href='/books/2025-01-10-%E6%88%91%E7%9A%84%E4%B8%BB%E9%A1%B5/'">
-            <div class="post-header">
-                <h4>我的主页</h4>
-                <div class="post-meta">
-                    <span class="post-date">2025-01-10</span>
-                </div>
-            </div>
-            <div class="post-divider"></div>
-            
-                <p><p>Markdown 是一种轻量级的标记语言，常用于格式化文本。它简单易学，广泛应用于文档编写、博客、论坛等场景。以下是 Markdown 的所有基本语法说明：</p>
-</p>
-            
-        </div>
-        
     </div>
 
-    <a href="#" class="toggle-posts" data-collection="books">查看更多...</a>
-</section>
- 
-<section class="category" id="posts-section">
-    <h3>posts</h3>
-    
-    
-    <div class="single-post" onclick="window.location.href='/2025/01/15/%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E.html'">
-        <div class="post-header">
-            <h4>My Post</h4>
-            <div class="post-meta">
-                <span class="post-date">2025-01-15</span>
-            </div>
-        </div>
-        <div class="post-divider"></div>
+    <article class="article">
+        <h1 class="article-title">Projects</h1>
+        <div class="article-title"></div>
         
-            <p><h1 id="ai-图像生成助手">AI 图像生成助手</h1>
-</p>
-        
-    </div>
-    
-
-    <div class="all-posts" style="display: none;">
-        
-        <div class="post-item" onclick="window.location.href='/2025/01/15/%E8%BD%AF%E4%BB%B6%E8%AF%B4%E6%98%8E.html'">
-            <div class="post-header">
-                <h4>My Post</h4>
-                <div class="post-meta">
-                    <span class="post-date">2025-01-15</span>
-                </div>
-            </div>
-            <div class="post-divider"></div>
-            
-                <p><h1 id="ai-图像生成助手">AI 图像生成助手</h1>
-</p>
-            
-        </div>
-        
-    </div>
-
-    <a href="#" class="toggle-posts" data-collection="posts">查看更多...</a>
-</section>
-
-
-<style>
-.carousel-container {
-    max-width: 1200px;
-    margin: 2em auto;
-}
-.carousel {
-    position: relative;
-    overflow: hidden;
-}
-.carousel-track {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-}
-.carousel-slide {
-    flex: 0 0 100%;
-    position: relative;
-    height: 400px;
-}
-.carousel-image {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-.carousel-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.carousel-content {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 2em;
-    background: linear-gradient(transparent, rgba(0,0,0,0.8));
-    color: white;
-}
-.carousel-button {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255,255,255,0.5);
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    z-index: 2;
-}
-.prev { left: 10px; }
-.next { right: 10px; }
-.post-category {
-    background: rgba(255,255,255,0.9);
-    color: #333;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.8em;
-}
-
-.category {
-    max-width: 1200px;  /* 增加最大宽度 */
-    margin: 3em auto;
-    position: relative;
-    padding: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.05);
-}
-
-.category h3 {
-    text-align: center;
-    font-size: 2em;
-    margin-bottom: 1.5em;
-    color: #333;
-    position: relative;
-}
-
-.category h3:after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background-color: #007bff;
-}
-
-.toggle-posts {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    text-decoration: none;
-    color: #007bff;
-    font-size: 0.9em;
-    padding: 5px 10px;
-    border-radius: 4px;
-    background: rgba(0,123,255,0.1);
-    transition: all 0.3s ease;
-}
-
-.toggle-posts:hover {
-    color: #0056b3;
-    background: rgba(0,123,255,0.2);
-}
-
-.post-item {
-    background: rgb(246, 248, 225);
-  border-radius: 10px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.post-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(230, 161, 161, 0.715)
-}
-
-.post-item h4 {
-    color: #333;
-    margin-bottom: 10px;
-    font-size: 1.1em;  /* 调小字体 */
-}
-
-.post-item p {
-    color: #505f6f;
-    font-size: 0.95em;
-    line-height: 1.7;
-    margin: 0;
-}
-
-.post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.post-header h4 {
-    margin: 0;
-    color: #2c3e50;
-    font-size: 1.1em;  /* 统一设置为相同大小 */
-}
-
-.post-meta {
-    font-size: 0.85em;
-    color: #7f8c8d;
-}
-
-.post-date {
-    padding: 3px 8px;
-    background: #f8f9fa;
-    border-radius: 4px;
-}
-
-.post-divider {
-    height: 1px;
-    background: linear-gradient(to right, #e0e0e0, #f5f5f5);
-    margin: 10px 0 15px 0;
-}
-
-.single-post {
-    background: white;
-    border-radius: 10px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-.single-post:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(65, 211, 196, 0.621);
-}
-
-.single-post h4 {
-    font-size: 1.1em;  /* 使单个文章标题字体与列表一致 */
-    color: #040404;
-    margin-bottom: 10px;
-}
-
-.single-post p {
-    color: #888885;
-    font-size: 0.95em;
-    line-height: 1.7;
-    margin: 0;
-}
-</style>
-
-
+        <div class="markdown-theme-github"><div id="projects-container">
+  <!-- 项目列表将在此动态生成 -->
+  <div class="project-card">
+    <h3><a href=" ">项目名称</a></h3>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const toggles = document.querySelectorAll('.toggle-posts');
-    toggles.forEach(toggle => {
-        toggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            const section = document.getElementById(`${this.dataset.collection}-section`);
-            const allPosts = section.querySelector('.all-posts');
-            const singlePost = section.querySelector('.single-post');
-            
-            if (allPosts.style.display === 'none') {
-                allPosts.style.display = 'block';
-                singlePost.style.display = 'none';
-                this.textContent = '点击收起=。=';
-                this.style.backgroundColor = '#f8d7da';
-            } else {
-                allPosts.style.display = 'none';
-                singlePost.style.display = 'block';
-                this.textContent = '查看更多...';
-                this.style.backgroundColor = 'rgba(0,123,255,0.1)';
-            }
+// 获取所有公开仓库
+const username = "LeLiang-SJTU";
+const apiUrl = `https://api.github.com/users/${username}/repos`;
+
+fetch(apiUrl)
+  .then(response => response.json())
+  .then(repos => {
+    // 遍历所有仓库
+    repos.forEach(repo => {
+      // 获取每个仓库的 README
+      const readmeUrl = `https://raw.githubusercontent.com/${username}/${repo.name}/main/README.md`;
+      
+      // 创建项目卡片
+      const projectCard = document.createElement('div');
+      projectCard.className = 'project-card';
+      projectCard.innerHTML = `
+        <h3><a href="${repo.html_url}">${repo.name}</a></h3>
+        <p>${repo.description || '暂无描述'}</p>
+        <div class="readme-content" id="readme-${repo.name}"></div>
+      `;
+      
+      // 添加到容器中
+      document.getElementById('projects-container').appendChild(projectCard);
+      
+      // 获取并显示 README 内容
+      fetch(readmeUrl)
+        .then(res => res.text())
+        .then(content => {
+          const readmeElement = document.getElementById(`readme-${repo.name}`);
+          readmeElement.innerHTML = marked.parse(content);
+        })
+        .catch(error => {
+          console.log(`${repo.name} 的 README 获取失败:`, error);
         });
     });
-});
-document.addEventListener('DOMContentLoaded', function() {
-    const track = document.querySelector('.carousel-track');
-    const slides = document.querySelectorAll('.carousel-slide');
-    const prevButton = document.querySelector('.carousel-button.prev');
-    const nextButton = document.querySelector('.carousel-button.next');
-    let currentSlide = 0;
-
-    function moveToSlide(index) {
-        track.style.transform = `translateX(-${index * 100}%)`;
-        currentSlide = index;
-    }
-
-    prevButton.addEventListener('click', () => {
-        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-        moveToSlide(currentSlide);
-    });
-
-    nextButton.addEventListener('click', () => {
-        currentSlide = (currentSlide + 1) % slides.length;
-        moveToSlide(currentSlide);
-    });
-
-    // Auto advance slides every 5 seconds
-    setInterval(() => {
-        currentSlide = (currentSlide + 1) % slides.length;
-        moveToSlide(currentSlide);
-    }, 5000);
-});
+  })
+  .catch(error => {
+    console.error("获取仓库列表失败:", error);
+  });
 </script>
+
+<style>
+.project-card {
+  border: 1px solid #ddd;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.project-card h3 {
+  margin-top: 0;
+}
+
+.readme-content {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f6f8fa;
+}
+</style>
+</div>
+    </article>
+
+    <script>
+        // 主要变量定义
+        const article = document.querySelector('article');
+        const themeMenu = document.getElementById('themeMenu');
+        const themeButton = document.querySelector('.theme-button');
+        const markdownContainer = document.querySelector('[class^="markdown-theme"]');
+        let isWideScreen = localStorage.getItem('content-width') === 'wide';
+
+        // 工具函数
+        const setArticleWidth = (isWide) => {
+            const baseClasses = 'bg-white rounded-lg shadow-md p-6';
+            article.className = `${baseClasses} content-${isWide ? 'wide' : 'narrow'}`;
+            localStorage.setItem('content-width', isWide ? 'wide' : 'narrow');
+        };
+
+        const changeTheme = (theme) => {
+            markdownContainer.className = `markdown-theme-${theme}`;
+            localStorage.setItem('preferred-theme', theme);
+            themeMenu.classList.remove('active');
+        };
+
+        // 事件监听设置
+        let clickTimer = null;
+
+        themeButton.addEventListener('click', (e) => {
+            if (e.detail === 1) {
+                clickTimer = setTimeout(() => {
+                    themeMenu.classList.toggle('active');
+                    e.stopPropagation();
+                }, 200); // 200ms 延迟，等待可能的双击事件
+            }
+        });
+
+        themeButton.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            clearTimeout(clickTimer); // 清除单击事件的计时器
+            themeMenu.classList.remove('active');
+            isWideScreen = !isWideScreen;
+            setArticleWidth(isWideScreen);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!document.querySelector('.theme-switcher').contains(e.target)) {
+                themeMenu.classList.remove('active');
+            }
+        });
+
+        // 主题选项事件委托
+        document.querySelector('.theme-menu').addEventListener('click', (e) => {
+            const themeOption = e.target.closest('.theme-option');
+            if (themeOption) {
+                changeTheme(themeOption.dataset.theme);
+            }
+        });
+
+        // 页面加载时恢复之前选择的主题和宽度
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('preferred-theme');
+            if (savedTheme) {
+                changeTheme(savedTheme);
+            }
+
+            setArticleWidth(isWideScreen);
+
+            themeMenu.classList.remove('active');
+        });
+    </script>
+    <script src="/assets/js/highlight-search.js"></script>
+</body>
+
+
+
 
  
         </main>
