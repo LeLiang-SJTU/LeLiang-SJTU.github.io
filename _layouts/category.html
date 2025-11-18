@@ -31,8 +31,10 @@ title: 分类 - {{ page.category }}
 
 <!-- 文章列表 -->
 <div class="space-y-6">
-    {% assign category_posts = site.categories[page.category] | sort: 'date' | reverse %}
-    {% for post in category_posts %}
+    {% assign category_posts = site.categories[page.category] %}
+    {% if category_posts %}
+        {% assign sorted_posts = category_posts | sort: 'date' | reverse %}
+        {% for post in sorted_posts %}
     <article class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location.href='{{ post.url }}'">
         <div class="md:flex">
             {% if post.image %}
@@ -80,6 +82,7 @@ title: 分类 - {{ page.category }}
         </div>
     </article>
     {% endfor %}
+    {% endif %}
 </div>
 
 <!-- 空状态 -->
