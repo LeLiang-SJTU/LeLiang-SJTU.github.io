@@ -5,9 +5,19 @@ title: 分类 - {{ page.category }}
 
 <!-- 分类页面头部 -->
 <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+    {% assign category_colors = 'indigo,green,yellow,red,blue,purple,pink,gray' | split: ',' %}
+    {% assign category_index = 0 %}
+    {% for cat in site.categories %}
+        {% if cat[0] == page.category %}
+            {% assign category_index = forloop.index0 | modulo: 8 %}
+            {% break %}
+        {% endif %}
+    {% endfor %}
+    {% assign color_name = category_colors[category_index] %}
+    
     <div class="flex items-center space-x-4 mb-4">
-        <div class="w-12 h-12 {% if page.category == '技术' %}bg-indigo-100{% elsif page.category == '生活' %}bg-green-100{% else %}bg-yellow-100{% endif %} rounded-lg flex items-center justify-center">
-            <span class="w-3 h-3 {% if page.category == '技术' %}bg-indigo-500{% elsif page.category == '生活' %}bg-green-500{% else %}bg-yellow-500{% endif %} rounded-full"></span>
+        <div class="w-12 h-12 bg-{{ color_name }}-100 rounded-lg flex items-center justify-center">
+            <span class="w-3 h-3 bg-{{ color_name }}-500 rounded-full"></span>
         </div>
         <div>
             <h1 class="text-2xl font-bold text-gray-800">{{ page.category }}</h1>
@@ -24,7 +34,7 @@ title: 分类 - {{ page.category }}
         {% elsif page.category == '随笔' %}
             <p>一些随性的思考和感悟，可能是对某个话题的深入思考，也可能是灵光一闪的想法。文字是思想的载体，记录着思维的轨迹。</p>
         {% else %}
-            <p>关于{{ page.category }}相关的所有文章集合。</p>
+            <p>关于{{ page.category }}相关的所有文章集合。这里包含了该分类下的所有文章内容。</p>
         {% endif %}
     </div>
 </div>
@@ -49,7 +59,16 @@ title: 分类 - {{ page.category }}
             <div class="p-6 md:w-2/3">
                 <div class="flex items-center space-x-2 mb-3">
                     {% for category in post.categories limit:1 %}
-                    <span class="px-3 py-1 {% if category == '技术' %}bg-indigo-100 text-indigo-700{% elsif category == '生活' %}bg-green-100 text-green-700{% else %}bg-yellow-100 text-yellow-700{% endif %} text-sm rounded-full">{{ category }}</span>
+                        {% assign cat_colors = 'indigo,green,yellow,red,blue,purple,pink,gray' | split: ',' %}
+                        {% assign cat_index = 0 %}
+                        {% for cat in site.categories %}
+                            {% if cat[0] == category %}
+                                {% assign cat_index = forloop.index0 | modulo: 8 %}
+                                {% break %}
+                            {% endif %}
+                        {% endfor %}
+                        {% assign cat_color = cat_colors[cat_index] %}
+                    <span class="px-3 py-1 bg-{{ cat_color }}-100 text-{{ cat_color }}-700 text-sm rounded-full">{{ category }}</span>
                     {% endfor %}
                     <span class="text-sm text-gray-500">{{ post.date | date: "%Y年%m月%d日" }}</span>
                     {% if post.reading_time %}

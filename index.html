@@ -85,7 +85,16 @@ title: 首页
             <div class="p-4">
                 <div class="flex items-center space-x-2 mb-2">
                     {% for category in post.categories limit:1 %}
-                    <span class="px-2 py-1 {% if category == '技术' %}bg-indigo-100 text-indigo-700{% elsif category == '生活' %}bg-green-100 text-green-700{% else %}bg-yellow-100 text-yellow-700{% endif %} text-xs rounded-full">{{ category }}</span>
+                        {% assign cat_colors = 'indigo,green,yellow,red,blue,purple,pink,gray' | split: ',' %}
+                        {% assign cat_index = 0 %}
+                        {% for cat in site.categories %}
+                            {% if cat[0] == category %}
+                                {% assign cat_index = forloop.index0 | modulo: 8 %}
+                                {% break %}
+                            {% endif %}
+                        {% endfor %}
+                        {% assign cat_color = cat_colors[cat_index] %}
+                    <span class="px-2 py-1 bg-{{ cat_color }}-100 text-{{ cat_color }}-700 text-xs rounded-full">{{ category }}</span>
                     {% endfor %}
                     <span class="text-xs text-gray-500">{{ post.date | date: "%Y-%m-%d" }}</span>
                 </div>
