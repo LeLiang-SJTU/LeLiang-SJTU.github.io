@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人博客</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .carousel-fade { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #6366f1, #a78bfa);
+        }
+        .masonry-grid {
+            column-count: 3;
+            column-gap: 1rem;
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1rem;
+        }
+        @media (max-width: 768px) {
+            .masonry-grid { column-count: 2; }
+        }
+        @media (max-width: 480px) {
+            .masonry-grid { column-count: 1; }
+        }
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .lightbox.active { display: flex; }
+        .nav-item-active {
+            background-color: rgb(229 231 255);
+            color: rgb(67 56 202);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-md fixed top-0 left-0 right-0 z-40">
+        <div class="flex items-center justify-between px-4 py-3">
+            <div class="flex items-center space-x-4">
+                <!-- 移动端菜单按钮 -->
+                <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 cursor-pointer" onclick="showPage('home')">
+                    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold">B</span>
+                    </div>
+                    <span class="text-xl font-semibold text-gray-800">我的博客</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- 搜索栏 -->
+                <div class="hidden md:flex items-center bg-gray-100 rounded-lg px-3 py-2">
+                    <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input type="text" placeholder="搜索文章..." class="bg-transparent outline-none text-sm w-48">
+                </div>
+                
+                <!-- 用户头像和下拉菜单 -->
+                <div class="relative">
+                    <button id="userMenuBtn" class="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                        <img src="https://picsum.photos/seed/avatar/40/40.jpg" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="hidden md:block text-sm font-medium text-gray-700">张三</span>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- 下拉菜单 -->
+                    <div id="userDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">个人资料</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">设置</a>
+                        <hr class="my-2">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">退出登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-16">
+        <!-- 侧边栏 -->
+        <aside id="sidebar" class="sidebar-transition bg-white shadow-lg fixed left-0 top-16 bottom-0 w-64 z-30 transform -translate-x-full lg:translate-x-0 lg:static lg:top-0">
+            <div class="p-4">
+                <!-- 桌面端折叠按钮 -->
+                <button id="sidebarToggle" class="hidden lg:block absolute -right-3 top-6 w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                    <svg id="toggleIcon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                
+                <nav class="space-y-2">
+                    <a href="#" onclick="showPage('home')" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" data-page="home">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        <span class="nav-text">首页</span>
+                    </a>
+                    
+                    <a href="#" onclick="showPage('timeline')" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" data-page="timeline">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span class="nav-text">时间流</span>
+                    </a>
+                    
+                    <a href="#" onclick="showPage('album')" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors" data-page="album">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="nav-text">相册</span>
+                    </a>
+                    
+                    <!-- 分类菜单 -->
+                    <div class="pt-4 border-t">
+                        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">分类</h3>
+                        <div class="space-y-1">
+                            <a href="#" onclick="showCategory('技术')" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm" data-category="技术">
+                                <span class="w-2 h-2 bg-indigo-400 rounded-full"></span>
+                                <span class="nav-text">技术</span>
+                            </a>
+                            <a href="#" onclick="showCategory('生活')" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm" data-category="生活">
+                                <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+                                <span class="nav-text">生活</span>
+                            </a>
+                            <a href="#" onclick="showCategory('随笔')" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm" data-category="随笔">
+                                <span class="w-2 h-2 bg-yellow-400 rounded-full"></span>
+                                <span class="nav-text">随笔</span>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- 移动端遮罩 -->
+        <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden hidden"></div>
+
+        <!-- 主内容区 -->
+        <main class="flex-1 lg:ml-0 p-6">
+            <!-- 首页 -->
+            <div id="home" class="page-content">
+                <!-- 轮播图 -->
+                <div class="relative bg-white rounded-xl shadow-lg overflow-hidden mb-8 carousel-fade">
+                    <div id="carousel" class="relative h-64 md:h-96">
+                        <div class="carousel-item absolute inset-0 transition-opacity duration-500">
+                            <img src="https://picsum.photos/seed/slide1/1200/400.jpg" alt="轮播图1" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                                <div class="p-6 text-white">
+                                    <h2 class="text-2xl md:text-3xl font-bold mb-2">探索前端开发的无限可能</h2>
+                                    <p class="text-sm md:text-base opacity-90">深入了解现代前端框架和最佳实践</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://picsum.photos/seed/slide2/1200/400.jpg" alt="轮播图2" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                                <div class="p-6 text-white">
+                                    <h2 class="text-2xl md:text-3xl font-bold mb-2">摄影记录生活之美</h2>
+                                    <p class="text-sm md:text-base opacity-90">用镜头捕捉每一个精彩瞬间</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item absolute inset-0 transition-opacity duration-500 opacity-0">
+                            <img src="https://picsum.photos/seed/slide3/1200/400.jpg" alt="轮播图3" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                                <div class="p-6 text-white">
+                                    <h2 class="text-2xl md:text-3xl font-bold mb-2">技术分享与成长</h2>
+                                    <p class="text-sm md:text-base opacity-90">记录学习过程中的点点滴滴</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 轮播控制按钮 -->
+                    <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                    
+                    <!-- 轮播指示器 -->
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                        <button onclick="goToSlide(0)" class="w-2 h-2 bg-white rounded-full carousel-dot transition-all"></button>
+                        <button onclick="goToSlide(1)" class="w-2 h-2 bg-white/50 rounded-full carousel-dot transition-all"></button>
+                        <button onclick="goToSlide(2)" class="w-2 h-2 bg-white/50 rounded-full carousel-dot transition-all"></button>
+                    </div>
+                </div>
+
+                <!-- 个人介绍 -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                    <div class="flex items-center space-x-4 mb-4">
+                        <img src="https://picsum.photos/seed/profile/80/80.jpg" alt="个人头像" class="w-20 h-20 rounded-full">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800">欢迎来到我的博客</h3>
+                            <p class="text-gray-600">前端开发者 | 摄影爱好者 | 终身学习者</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed">
+                        这里记录着我的技术学习历程、生活感悟和摄影作品。我相信技术的力量能够改变世界，
+                        也相信生活中的每一个瞬间都值得被记录和分享。希望通过这个平台，与更多志同道合的朋友交流学习。
+                    </p>
+                </div>
+
+                <!-- 最新文章 -->
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">最新文章</h2>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <article class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+                            <img src="https://picsum.photos/seed/article1/400/200.jpg" alt="文章封面" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full">技术</span>
+                                    <span class="text-xs text-gray-500">2024-01-15</span>
+                                </div>
+                                <h3 class="font-semibold text-gray-800 mb-2">React 18 新特性深度解析</h3>
+                                <p class="text-sm text-gray-600 line-clamp-3">深入了解React 18带来的并发特性、自动批处理、Suspense改进等重要更新...</p>
+                            </div>
+                        </article>
+                        
+                        <article class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+                            <img src="https://picsum.photos/seed/article2/400/200.jpg" alt="文章封面" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">生活</span>
+                                    <span class="text-xs text-gray-500">2024-01-12</span>
+                                </div>
+                                <h3 class="font-semibold text-gray-800 mb-2">周末摄影之旅：城市风光</h3>
+                                <p class="text-sm text-gray-600 line-clamp-3">这个周末带着相机走遍了城市的每个角落，记录下了那些平时被忽略的美景...</p>
+                            </div>
+                        </article>
+                        
+                        <article class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+                            <img src="https://picsum.photos/seed/article3/400/200.jpg" alt="文章封面" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <div class="flex items-center space-x-2 mb-2">
+                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">随笔</span>
+                                    <span class="text-xs text-gray-500">2024-01-10</span>
+                                </div>
+                                <h3 class="font-semibold text-gray-800 mb-2">关于远程工作的思考</h3>
+                                <p class="text-sm text-gray-600 line-clamp-3">远程工作两年来的心得体会，以及如何在家保持高效工作的方法分享...</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 时间流页面 -->
+            <div id="timeline" class="page-content hidden">
+                <h1 class="text-3xl font-bold text-gray-800 mb-8">时间流</h1>
+                <div class="relative timeline-line">
+                    <div class="space-y-8">
+                        <div class="relative flex items-start space-x-6">
+                            <div class="relative z-10 w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1 bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-lg font-semibold text-gray-800">React 18 新特性深度解析</h3>
+                                    <span class="text-sm text-gray-500">2024-01-15</span>
+                                </div>
+                                <p class="text-gray-600 mb-3">深入了解React 18带来的并发特性、自动批处理、Suspense改进等重要更新...</p>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full">技术</span>
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-800 text-sm">阅读全文 →</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="relative flex items-start space-x-6">
+                            <div class="relative z-10 w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1 bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-lg font-semibold text-gray-800">周末摄影之旅：城市风光</h3>
+                                    <span class="text-sm text-gray-500">2024-01-12</span>
+                                </div>
+                                <p class="text-gray-600 mb-3">这个周末带着相机走遍了城市的每个角落，记录下了那些平时被忽略的美景...</p>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">生活</span>
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-800 text-sm">阅读全文 →</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="relative flex items-start space-x-6">
+                            <div class="relative z-10 w-10 h-10 bg-yellow-600 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1 bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-lg font-semibold text-gray-800">关于远程工作的思考</h3>
+                                    <span class="text-sm text-gray-500">2024-01-10</span>
+                                </div>
+                                <p class="text-gray-600 mb-3">远程工作两年来的心得体会，以及如何在家保持高效工作的方法分享...</p>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">随笔</span>
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-800 text-sm">阅读全文 →</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="relative flex items-start space-x-6">
+                            <div class="relative z-10 w-10 h-10 bg-indigo-600 rounded-full flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                                </svg>
+                            </div>
+                            <div class="flex-1 bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="text-lg font-semibold text-gray-800">TypeScript 高级类型技巧</h3>
+                                    <span class="text-sm text-gray-500">2024-01-08</span>
+                                </div>
+                                <p class="text-gray-600 mb-3">分享一些TypeScript的高级类型使用技巧，包括条件类型、映射类型等...</p>
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full">技术</span>
+                                    <a href="#" class="text-indigo-600 hover:text-indigo-800 text-sm">阅读全文 →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 相册页面 -->
+            <div id="album" class="page-content hidden">
+                <h1 class="text-3xl font-bold text-gray-800 mb-8">摄影相册</h1>
+                <div class="masonry-grid">
+                    <div class="masonry-item">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer" onclick="openLightbox('https://picsum.photos/seed/photo1/600/800.jpg')">
+                            <img src="https://picsum.photos/seed/photo1/400/600.jpg" alt="摄影作品" class="w-full">
+                            <div class="p-3">
+                                <h4 class="font-medium text-gray-800">城市夜景</h4>
+                                <p class="text-sm text-gray-500">2024-01-15</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="masonry-item">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer" onclick="openLightbox('https://picsum.photos/seed/photo2/600/400.jpg')">
+                            <img src="https://picsum.photos/seed/photo2/400/300.jpg" alt="摄影作品" class="w-full">
+                            <div class="p-3">
+                                <h4 class="font-medium text-gray-800">自然风光</h4>
+                                <p class="text-sm text-gray-500">2024-01-12</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="masonry-item">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer" onclick="openLightbox('https://picsum.photos/seed/photo3/600/600.jpg')">
+                            <img src="https://picsum.photos/seed/photo3/400/400.jpg" alt="摄影作品" class="w-full">
+                            <div class="p-3">
+                                <h4 class="font-medium text-gray-800">人文纪实</h4>
+                                <p class="text-sm text-gray-500">2024-01-10</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="masonry-item">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer" onclick="openLightbox('https://picsum.photos/seed/photo4/600/500.jpg')">
+                            <img src="https://picsum.photos/seed/photo4/400/350.jpg" alt="摄影作品" class="w-full">
+                            <div class="p-3">
+                                <h4 class="font-medium text-gray-800">建筑美学</h4>
+                                <p class="text-sm text-gray-500">2024-01-08</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="masonry-item">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer" onclick="openLightbox('https://picsum.photos/seed/photo5/600/700.jpg')">
+                            <img src="https://picsum.photos/seed/photo5/400/500.jpg" alt="摄影作品" class="w-full">
+                            <div class="p-3">
+                                <h4 class="font-medium text-gray-800">街头摄影</h4>
+                                <p class="text-sm text-gray-500">2024-01-05</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="masonry-item">
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer" onclick="openLightbox('https://picsum.photos/seed/photo6/600/450.jpg')">
+                            <img src="https://picsum.photos/seed/photo6/400/300.jpg" alt="摄影作品" class="w-full">
+                            <div class="p-3">
+                                <h4 class="font-medium text-gray-800">微距世界</h4>
+                                <p class="text-sm text-gray-500">2024-01-03</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分类页面 -->
+            <div id="category" class="page-content hidden">
+                <h1 id="categoryTitle" class="text-3xl font-bold text-gray-800 mb-8">分类文章</h1>
+                <div id="categoryContent" class="grid gap-6">
+                    <!-- 动态内容将在这里插入 -->
+                </div>
+            </div>
+
+            <!-- 文章详情页面（预留） -->
+            <div id="article" class="page-content hidden">
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <h1 class="text-3xl font-bold text-gray-800 mb-4">文章标题</h1>
+                    <div class="flex items-center space-x-4 mb-6 text-sm text-gray-500">
+                        <span>发布时间：2024-01-15</span>
+                        <span>分类：技术</span>
+                        <span>阅读时间：5分钟</span>
+                    </div>
+                    <div class="prose max-w-none">
+                        <p>文章内容将在这里显示...</p>
+                    </div>
+                    <!-- 评论区预留 -->
+                    <div class="mt-12 pt-8 border-t">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">评论区</h3>
+                        <p class="text-gray-500">评论区功能即将上线...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 灯箱 -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <div class="flex items-center justify-center h-full p-4">
+            <img id="lightboxImage" src="" alt="放大图片" class="max-w-full max-h-full object-contain">
+        </div>
+        <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white hover:text-gray-300">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        // 轮播图功能
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        const dots = document.querySelectorAll('.carousel-dot');
+        let autoSlideInterval;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.opacity = i === index ? '1' : '0';
+            });
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('bg-white', i === index);
+                dot.classList.toggle('bg-white/50', i !== index);
+            });
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            showSlide((currentSlide + 1) % slides.length);
+            resetAutoSlide();
+        }
+
+        function prevSlide() {
+            showSlide((currentSlide - 1 + slides.length) % slides.length);
+            resetAutoSlide();
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+            resetAutoSlide();
+        }
+
+        function autoSlide() {
+            nextSlide();
+        }
+
+        function resetAutoSlide() {
+            clearInterval(autoSlideInterval);
+            autoSlideInterval = setInterval(autoSlide, 5000);
+        }
+
+        // 启动自动轮播
+        autoSlideInterval = setInterval(autoSlide, 5000);
+
+        // 页面切换功能
+        function showPage(pageId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // 显示选中页面
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+            }
+            
+            // 更新导航高亮
+            updateNavHighlight(pageId);
+            
+            // 移动端关闭侧边栏
+            closeMobileSidebar();
+        }
+
+        // 显示分类页面
+        function showCategory(category) {
+            showPage('category');
+            document.getElementById('categoryTitle').textContent = `${category}分类`;
+            
+            // 模拟分类文章数据
+            const categoryArticles = {
+                '技术': [
+                    { title: 'React 18 新特性深度解析', date: '2024-01-15', excerpt: '深入了解React 18带来的并发特性、自动批处理、Suspense改进等重要更新...' },
+                    { title: 'TypeScript 高级类型技巧', date: '2024-01-08', excerpt: '分享一些TypeScript的高级类型使用技巧，包括条件类型、映射类型等...' },
+                    { title: 'Vue 3 Composition API 实战', date: '2024-01-02', excerpt: '通过实际案例学习Vue 3 Composition API的使用方法和最佳实践...' }
+                ],
+                '生活': [
+                    { title: '周末摄影之旅：城市风光', date: '2024-01-12', excerpt: '这个周末带着相机走遍了城市的每个角落，记录下了那些平时被忽略的美景...' },
+                    { title: '咖啡与代码的完美搭配', date: '2024-01-06', excerpt: '探索不同咖啡豆与编程语言的奇妙组合，提升工作效率的小秘诀...' }
+                ],
+                '随笔': [
+                    { title: '关于远程工作的思考', date: '2024-01-10', excerpt: '远程工作两年来的心得体会，以及如何在家保持高效工作的方法分享...' },
+                    { title: '读书笔记：《代码整洁之道》', date: '2024-01-04', excerpt: '分享阅读经典技术书籍的感悟和收获，以及如何在实际项目中应用...' }
+                ]
+            };
+            
+            const articles = categoryArticles[category] || [];
+            const contentHtml = articles.map(article => `
+                <article class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">${article.title}</h3>
+                    <p class="text-sm text-gray-500 mb-3">${article.date}</p>
+                    <p class="text-gray-600 mb-4">${article.excerpt}</p>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">阅读全文 →</a>
+                </article>
+            `).join('');
+            
+            document.getElementById('categoryContent').innerHTML = contentHtml;
+            
+            // 更新分类导航高亮
+            updateCategoryHighlight(category);
+        }
+
+        // 更新导航高亮
+        function updateNavHighlight(pageId) {
+            document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+                if (item.dataset.page === pageId) {
+                    item.classList.add('nav-item-active');
+                } else {
+                    item.classList.remove('nav-item-active');
+                }
+            });
+        }
+
+        // 更新分类导航高亮
+        function updateCategoryHighlight(category) {
+            document.querySelectorAll('.nav-item[data-category]').forEach(item => {
+                if (item.dataset.category === category) {
+                    item.classList.add('nav-item-active');
+                } else {
+                    item.classList.remove('nav-item-active');
+                }
+            });
+        }
+
+        // 移动端侧边栏控制
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        });
+
+        sidebarOverlay.addEventListener('click', closeMobileSidebar);
+
+        function closeMobileSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        }
+
+        // 桌面端侧边栏折叠
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const navTexts = document.querySelectorAll('.nav-text');
+        let isCollapsed = false;
+
+        sidebarToggle.addEventListener('click', () => {
+            isCollapsed = !isCollapsed;
+            
+            if (isCollapsed) {
+                sidebar.classList.add('w-16');
+                sidebar.classList.remove('w-64');
+                navTexts.forEach(text => text.classList.add('hidden'));
+                toggleIcon.style.transform = 'rotate(180deg)';
+            } else {
+                sidebar.classList.remove('w-16');
+                sidebar.classList.add('w-64');
+                navTexts.forEach(text => text.classList.remove('hidden'));
+                toggleIcon.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // 用户下拉菜单
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userDropdown = document.getElementById('userDropdown');
+
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', () => {
+            userDropdown.classList.add('hidden');
+        });
+
+        // 灯箱功能
+        function openLightbox(imageSrc) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            lightboxImage.src = imageSrc;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // ESC键关闭灯箱
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        // 初始化页面
+        showPage('home');
+    </script>
+</body>
+</html>

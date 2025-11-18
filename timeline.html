@@ -1,0 +1,45 @@
+---
+layout: default
+title: 时间流
+permalink: /timeline/
+---
+
+<h1 class="text-3xl font-bold text-gray-800 mb-8">时间流</h1>
+<div class="relative timeline-line">
+    <div class="space-y-8">
+        {% assign sorted_posts = site.posts | sort: 'date' | reverse %}
+        {% for post in sorted_posts %}
+        <div class="relative flex items-start space-x-6">
+            <div class="relative z-10 w-10 h-10 {% if post.categories contains '技术' %}bg-indigo-600{% elsif post.categories contains '生活' %}bg-green-600{% else %}bg-yellow-600{% endif %} rounded-full flex items-center justify-center">
+                {% if post.categories contains '技术' %}
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                {% elsif post.categories contains '生活' %}
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+                {% else %}
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                {% endif %}
+            </div>
+            <div class="flex-1 bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-semibold text-gray-800">{{ post.title }}</h3>
+                    <span class="text-sm text-gray-500">{{ post.date | date: "%Y-%m-%d" }}</span>
+                </div>
+                <p class="text-gray-600 mb-3">{{ post.excerpt | strip_html | truncate: 150 }}</p>
+                <div class="flex items-center space-x-2">
+                    {% for category in post.categories limit:1 %}
+                    <span class="px-2 py-1 {% if category == '技术' %}bg-indigo-100 text-indigo-700{% elsif category == '生活' %}bg-green-100 text-green-700{% else %}bg-yellow-100 text-yellow-700{% endif %} text-xs rounded-full">{{ category }}</span>
+                    {% endfor %}
+                    <a href="{{ post.url }}" class="text-indigo-600 hover:text-indigo-800 text-sm">阅读全文 →</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,143 @@
+---
+layout: default
+title: 首页
+---
+
+<!-- 轮播图 -->
+<div class="relative bg-white rounded-xl shadow-lg overflow-hidden mb-8 carousel-fade">
+    <div id="carousel" class="relative h-64 md:h-96">
+        <div class="carousel-item absolute inset-0 transition-opacity duration-500">
+            <img src="https://picsum.photos/seed/slide1/1200/400.jpg" alt="轮播图1" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                <div class="p-6 text-white">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2">探索前端开发的无限可能</h2>
+                    <p class="text-sm md:text-base opacity-90">深入了解现代前端框架和最佳实践</p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item absolute inset-0 transition-opacity duration-500 opacity-0">
+            <img src="https://picsum.photos/seed/slide2/1200/400.jpg" alt="轮播图2" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                <div class="p-6 text-white">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2">摄影记录生活之美</h2>
+                    <p class="text-sm md:text-base opacity-90">用镜头捕捉每一个精彩瞬间</p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item absolute inset-0 transition-opacity duration-500 opacity-0">
+            <img src="https://picsum.photos/seed/slide3/1200/400.jpg" alt="轮播图3" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                <div class="p-6 text-white">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-2">技术分享与成长</h2>
+                    <p class="text-sm md:text-base opacity-90">记录学习过程中的点点滴滴</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 轮播控制按钮 -->
+    <button onclick="prevSlide()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+    </button>
+    <button onclick="nextSlide()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+    </button>
+    
+    <!-- 轮播指示器 -->
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+        <button onclick="goToSlide(0)" class="w-2 h-2 bg-white rounded-full carousel-dot transition-all"></button>
+        <button onclick="goToSlide(1)" class="w-2 h-2 bg-white/50 rounded-full carousel-dot transition-all"></button>
+        <button onclick="goToSlide(2)" class="w-2 h-2 bg-white/50 rounded-full carousel-dot transition-all"></button>
+    </div>
+</div>
+
+<!-- 个人介绍 -->
+<div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+    <div class="flex items-center space-x-4 mb-4">
+        <img src="https://picsum.photos/seed/profile/80/80.jpg" alt="个人头像" class="w-20 h-20 rounded-full">
+        <div>
+            <h3 class="text-xl font-semibold text-gray-800">欢迎来到我的博客</h3>
+            <p class="text-gray-600">{{ site.description }}</p>
+        </div>
+    </div>
+    <p class="text-gray-700 leading-relaxed">
+        这里记录着我的技术学习历程、生活感悟和摄影作品。我相信技术的力量能够改变世界，
+        也相信生活中的每一个瞬间都值得被记录和分享。希望通过这个平台，与更多志同道合的朋友交流学习。
+    </p>
+</div>
+
+<!-- 最新文章 -->
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">最新文章</h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for post in site.posts limit:3 %}
+        <article class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
+            {% if post.image %}
+            <img src="{{ post.image }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
+            {% else %}
+            <img src="https://picsum.photos/seed/{{ post.title | slugify }}/400/200.jpg" alt="{{ post.title }}" class="w-full h-48 object-cover">
+            {% endif %}
+            <div class="p-4">
+                <div class="flex items-center space-x-2 mb-2">
+                    {% for category in post.categories limit:1 %}
+                    <span class="px-2 py-1 {% if category == '技术' %}bg-indigo-100 text-indigo-700{% elsif category == '生活' %}bg-green-100 text-green-700{% else %}bg-yellow-100 text-yellow-700{% endif %} text-xs rounded-full">{{ category }}</span>
+                    {% endfor %}
+                    <span class="text-xs text-gray-500">{{ post.date | date: "%Y-%m-%d" }}</span>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">{{ post.title }}</h3>
+                <p class="text-sm text-gray-600 line-clamp-3">{{ post.excerpt | strip_html | truncate: 100 }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+// 轮播图功能
+let currentSlide = 0;
+const slides = document.querySelectorAll('.carousel-item');
+const dots = document.querySelectorAll('.carousel-dot');
+let autoSlideInterval;
+
+function showSlide(index) {
+    slides.forEach((slide, i) => {
+        slide.style.opacity = i === index ? '1' : '0';
+    });
+    dots.forEach((dot, i) => {
+        dot.classList.toggle('bg-white', i === index);
+        dot.classList.toggle('bg-white/50', i !== index);
+    });
+    currentSlide = index;
+}
+
+function nextSlide() {
+    showSlide((currentSlide + 1) % slides.length);
+    resetAutoSlide();
+}
+
+function prevSlide() {
+    showSlide((currentSlide - 1 + slides.length) % slides.length);
+    resetAutoSlide();
+}
+
+function goToSlide(index) {
+    showSlide(index);
+    resetAutoSlide();
+}
+
+function autoSlide() {
+    nextSlide();
+}
+
+function resetAutoSlide() {
+    clearInterval(autoSlideInterval);
+    autoSlideInterval = setInterval(autoSlide, 5000);
+}
+
+// 启动自动轮播
+autoSlideInterval = setInterval(autoSlide, 5000);
+</script>
