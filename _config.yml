@@ -1,5 +1,5 @@
 # Site settings
-title: Lo的个人博客
+title: Lo
 description: 前端开发者 | 摄影爱好者 | 终身学习者
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://LeLiang-SJTU.github.io"  # the base hostname & protocol for your site, e.g. http://example.com
