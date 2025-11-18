@@ -25,13 +25,7 @@ exclude:
   - README.md
 
 # Collections
-collections:
-  posts:
-    output: true
-    permalink: /:categories/:year/:month/:day/:title/
-  categories:
-    output: true
-    permalink: /:collection/:name/
+
 
 # Defaults
 defaults:
@@ -41,11 +35,7 @@ defaults:
     values:
       layout: "post"
       author: "LoLo"
-  - scope:
-      path: ""
-      type: "categories"
-    values:
-      layout: "category"
+
 
 # Pagination
 paginate: 10
