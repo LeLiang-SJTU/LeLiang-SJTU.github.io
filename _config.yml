@@ -2,7 +2,7 @@
 title: 我的个人博客
 description: 前端开发者 | 摄影爱好者 | 终身学习者
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://username.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://LeLiang-SJTU.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 # Build settings
 markdown: kramdown
@@ -55,7 +55,7 @@ lang: zh-CN
 timezone: Asia/Shanghai
 
 # Social links (optional)
-github_username: username
+github_username: LeLiang-SJTU
 twitter_username: username
 
 # Google Analytics (optional)
