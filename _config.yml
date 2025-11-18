@@ -1,8 +1,8 @@
 # Site settings
-title: 我的个人博客
+title: Lo的个人博客
 description: 前端开发者 | 摄影爱好者 | 终身学习者
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://LeLiang-SJTU.github.io/LeLiang-SJTU" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://LeLiang-SJTU.github.io"  # the base hostname & protocol for your site, e.g. http://example.com
 
 # Build settings
 markdown: kramdown
@@ -29,6 +29,9 @@ collections:
   posts:
     output: true
     permalink: /:categories/:year/:month/:day/:title/
+  categories:
+    output: true
+    permalink: /:collection/:name/
 
 # Defaults
 defaults:
@@ -37,7 +40,12 @@ defaults:
       type: "posts"
     values:
       layout: "post"
-      author: "张三"
+      author: "LoLo"
+  - scope:
+      path: ""
+      type: "categories"
+    values:
+      layout: "category"
 
 # Pagination
 paginate: 10
@@ -49,7 +57,7 @@ sass:
   sass_dir: _sass
 
 # Site metadata
-author: 张三
+author: LoLo
 email: your-email@example.com
 lang: zh-CN
 timezone: Asia/Shanghai
