@@ -1,0 +1,122 @@
+<!-- _includes/category_nav.html -->
+<style>
+  /* 我们会把样式和JS放在这里，方便初学者管理 */
+  .category-nav ul {
+    list-style-type: none;
+    padding-left: 20px;
+  }
+  .category-nav li {
+    margin: 5px 0;
+  }
+  .category-nav .top-level > div {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+  }
+  .category-nav .top-level > div:hover {
+    background-color: #e0e0e0;
+  }
+  .category-nav .submenu {
+    display: none; /* 默认折叠 */
+    border-left: 2px solid #ccc;
+    margin-top: 5px;
+  }
+  .category-nav .submenu a {
+    display: block;
+    padding: 5px 15px;
+    text-decoration: none;
+    color: #333;
+  }
+  .category-nav .submenu a:hover {
+    background-color: #f9f9f9;
+  }
+  .category-nav .toggle-icon {
+    font-weight: bold;
+    transition: transform 0.2s;
+  }
+  .category-nav .top-level.open > div .toggle-icon {
+    transform: rotate(90deg);
+  }
+</style>
+
+<nav class="category-nav">
+  <h3>文章分类</h3>
+  <ul>
+    {%- comment -%}
+    第一步: 收集所有顶层分类，并去重
+    我们通过遍历所有文章，只取每个文章分类数组的第一个元素
+    然后用一个奇特的 "append+split" 方法来模拟数组操作，最后用 uniq 过滤器去重
+    {%- endcomment -%}
+    {%- assign top_level_categories = "" -%}
+    {%- for post in site.posts -%}
+      {%- assign first_cat = post.categories | first -%}
+      {%- unless top_level_categories contains first_cat -%}
+        {%- assign top_level_categories = top_level_categories | append: first_cat | append: "|||" -%}
+      {%- endunless -%}
+    {%- endfor -%}
+    {%- assign top_level_categories = top_level_categories | split: "|||" | uniq | sort -%}
+
+    {%- for category in top_level_categories -%}
+      {%- if category != "" -%}
+        <li class="top-level">
+          <div>
+            <span>{{ category | capitalize }}</span>
+            <span class="toggle-icon">></span>
+          </div>
+
+          {%- comment -%}
+          第二步: 找出当前顶层分类下的所有次级分类
+          {%- endcomment -%}
+          {%- assign sub_categories = "" -%}
+          {%- for post in site.posts -%}
+            {%- if post.categories.first == category and post.categories.size > 1 -%}
+              {%- assign second_cat = post.categories[1] -%}
+              {%- unless sub_categories contains second_cat -%}
+                {%- assign sub_categories = sub_categories | append: second_cat | append: "|||" -%}
+              {%- endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- assign sub_categories = sub_categories | split: "|||" | uniq | sort -%}
+
+          {%- if sub_categories.size > 0 -%}
+            <ul class="submenu">
+              {%- for sub_category in sub_categories -%}
+                {%- if sub_category != "" -%}
+                  <li>
+                    <!-- 未来你可以把这里的链接指向一个真正的分类页面 -->
+                    <a href="#">{{ sub_category | capitalize }}</a>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const topLevelItems = document.querySelectorAll('.category-nav .top-level > div');
+
+    topLevelItems.forEach(item => {
+      item.addEventListener('click', function () {
+        const parentLi = this.parentElement;
+        const submenu = parentLi.querySelector('.submenu');
+
+        if (submenu) {
+          parentLi.classList.toggle('open');
+          if (submenu.style.display === 'block') {
+            submenu.style.display = 'none';
+          } else {
+            submenu.style.display = 'block';
+          }
+        }
+      });
+    });
+  });
+</script>
