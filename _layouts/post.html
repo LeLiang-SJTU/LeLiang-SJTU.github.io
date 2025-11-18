@@ -5,16 +5,21 @@ layout: default
 <article class="bg-white rounded-xl shadow-lg p-8">
     <header class="mb-8">
         <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ page.title }}</h1>
-        <div class="flex items-center space-x-4 text-sm text-gray-500">
+        <div class="flex items-center space-x-4 text-sm text-gray-500 mb-4">
             <span>发布时间：{{ page.date | date: "%Y-%m-%d" }}</span>
             {% if page.categories %}
             <span>分类：{{ page.categories | join: ', ' }}</span>
             {% endif %}
-            {% if page.tags %}
-            <span>标签：{{ page.tags | join: ', ' }}</span>
-            {% endif %}
             <span>阅读时间：{% if page.reading_time %}{{ page.reading_time }}{% else %}5{% endif %}分钟</span>
         </div>
+        
+        {% if page.tags %}
+        <div class="flex flex-wrap gap-2 mb-6">
+            {% for tag in page.tags %}
+            <span class="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full hover:bg-indigo-500 hover:text-white transition-all duration-300 cursor-pointer transform hover:scale-105">#{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
     </header>
     
     <div class="prose prose-lg max-w-none">

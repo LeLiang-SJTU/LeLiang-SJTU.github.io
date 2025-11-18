@@ -154,7 +154,15 @@
                 </div>
             </div>
             
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-6">
+                <!-- 主导航菜单 -->
+                <nav class="hidden lg:flex items-center space-x-6">
+                    <a href="/" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors {% if page.url == '/' %}text-indigo-600{% endif %}">首页</a>
+                    <a href="/timeline/" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors {% if page.url contains '/timeline/' %}text-indigo-600{% endif %}">时间流</a>
+                    <a href="/album/" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors {% if page.url contains '/album/' %}text-indigo-600{% endif %}">相册</a>
+                    <a href="/about/" class="text-gray-700 hover:text-indigo-600 font-medium transition-colors {% if page.url contains '/about/' %}text-indigo-600{% endif %}">关于</a>
+                </nav>
+                
                 <!-- 搜索栏 -->
                 <div class="hidden md:flex items-center bg-gray-100 rounded-lg px-3 py-2">
                     <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
