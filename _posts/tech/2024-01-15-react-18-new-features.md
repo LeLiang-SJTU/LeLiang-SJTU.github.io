@@ -3,7 +3,7 @@ layout: post
 title: React 18 新特性深度解析
 date: 2024-01-15 10:00:00 +0800
 categories: ceshi
-tags: [React, JavaScript, 前端] 
+tags: [React, JavaScript, 前端, 推荐] 
 image: https://picsum.photos/seed/react18/800/400.jpg
 excerpt: 深入了解React 18带来的并发特性、自动批处理、Suspense改进等重要更新
 reading_time: 8

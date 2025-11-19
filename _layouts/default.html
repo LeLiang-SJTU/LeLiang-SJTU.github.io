@@ -19,7 +19,7 @@
     {% feed_meta %}
     
     <!-- Custom Styles -->
-    <link rel="stylesheet" href="{{ '/assets/css/style.scss' | relative_url }}">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
     <style>
         body { 
             font-family: 'Inter', sans-serif;
@@ -83,6 +83,17 @@
             height: calc(100vh - 64px);
             overflow-y: auto;
             z-index: 30;
+            transition: transform 0.3s ease;
+        }
+        
+        /* 移动端侧边栏默认隐藏 */
+        @media (max-width: 1023px) {
+            .sidebar-fixed {
+                transform: translateX(-100%);
+            }
+            .sidebar-fixed.mobile-open {
+                transform: translateX(0);
+            }
         }
         
         @media (min-width: 1024px) {
@@ -96,13 +107,46 @@
                 display: none;
             }
             .sidebar-collapsed .category-section {
+                padding: 0;
+                margin: 0;
+            }
+            .sidebar-collapsed .category-section h3 {
                 display: none;
+            }
+            .sidebar-collapsed .category-item {
+                display: flex;
+                justify-content: center;
+                padding: 0.5rem 0;
+            }
+            .sidebar-collapsed .category-item a {
+                padding: 0.5rem;
+                justify-content: center;
+            }
+            .sidebar-collapsed .subcategory-list {
+                display: none !important;
+            }
+            .sidebar-collapsed .category-chevron {
+                display: none;
+            }
+            .sidebar-collapsed #tagCloud {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 0.5rem 0;
+            }
+            .sidebar-collapsed #tagCloud .tag-bubble {
+                margin: 2px 0;
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
         }
         
         /* 主内容区域适配 */
         .main-content {
             transition: margin-left 0.3s ease;
+            width: 100%;
         }
         
         @media (min-width: 1024px) {
@@ -111,6 +155,12 @@
             }
             .main-content-collapsed {
                 margin-left: 4rem;
+            }
+        }
+        
+        @media (max-width: 1023px) {
+            .main-content {
+                margin-left: 0 !important;
             }
         }
         
@@ -147,11 +197,55 @@
         
         /* 分类颜色点 */
         .category-dot {
-            transition: transform 0.2s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
         }
         
         .category-item:hover .category-dot {
-            transform: scale(1.2);
+            transform: scale(1.3);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 0 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 标签气泡样式 */
+        .tag-bubble {
+            display: inline-block;
+            padding: 3px 8px;
+            margin: 2px 4px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            opacity: 0.85;
+        }
+        
+        .tag-bubble::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .tag-bubble:hover::before {
+            left: 100%;
+        }
+        
+        .tag-bubble:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tag-bubble.active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) inset;
         }
     </style>
     
@@ -169,18 +263,13 @@
                     </svg>
                 </button>
                 
-                <!-- 桌面端折叠按钮 -->
-                <button id="sidebarCollapse" class="hidden lg:block absolute -right-3 top-6 w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg">
-                    <svg id="collapseIcon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                </button>
+
 
             </div>
             
             <div class="flex items-center space-x-6">
                 <!-- 主导航菜单 -->
-                <nav class="hidden lg:flex items-center space-x-6">
+                <nav class="hidden md:flex items-center space-x-6">
                     <a href="/" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors {% if page.url == '/' %}nav-item-active{% endif %}" data-page="home">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
@@ -203,19 +292,50 @@
                     </a>
                     
                     <a href="/about/" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors {% if page.url contains '/about/' %}nav-item-active{% endif %}" data-page="about">
+                        <!-- 替换后的“信息卡片”SVG图标 -->
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         <span class="nav-text">关于</span>
                     </a>
                 </nav>
+                
+                <!-- 移动端导航菜单 -->
+                <div class="md:hidden flex items-center space-x-1">
+                    <a href="/" class="p-2 rounded-lg hover:bg-gray-100 transition-colors {% if page.url == '/' %}nav-item-active{% endif %}" title="首页">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                    </a>
+                    <a href="/timeline/" class="p-2 rounded-lg hover:bg-gray-100 transition-colors {% if page.url contains '/timeline/' %}nav-item-active{% endif %}" title="时间流">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </a>
+                    <a href="/album/" class="p-2 rounded-lg hover:bg-gray-100 transition-colors {% if page.url contains '/album/' %}nav-item-active{% endif %}" title="相册">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </a>
+                    <a href="/about/" class="p-2 rounded-lg hover:bg-gray-100 transition-colors {% if page.url contains '/about/' %}nav-item-active{% endif %}" title="关于">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </a>
+                    <!-- 搜索按钮 -->
+                    <button onclick="openSearchModal()" class="p-2 rounded-lg hover:bg-gray-100">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                </div>
                 
                 <!-- 搜索栏 -->
                 <div class="hidden md:flex items-center bg-gray-100 rounded-lg px-3 py-2">
                     <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
-                    <input type="text" placeholder="搜索文章..." class="bg-transparent outline-none text-sm w-48" id="searchInput">
+                    <input type="text" placeholder="搜索文章..." readonly onclick="openSearchModal()" class="bg-transparent outline-none text-sm w-48 cursor-pointer" id="searchInput">
                 </div>
                 
                 <!-- 用户头像和下拉菜单 -->
@@ -238,15 +358,84 @@
                 </div>
             </div>
         </div>
+        
+        <!-- 搜索弹窗 -->
+    <div id="searchModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-start justify-center pt-20">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl mx-4 max-h-[80vh] overflow-hidden">
+            <div class="p-6 border-b">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">搜索文章</h2>
+                    <button onclick="closeSearchModal()" class="text-gray-500 hover:text-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="modalSearchInput" 
+                        placeholder="输入关键词搜索文章..." 
+                        class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                    <svg class="absolute right-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[50vh]">
+                <div id="modalSearchResults">
+                    <div class="text-center py-8 text-gray-500">
+                        <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <p>输入关键词开始搜索</p>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 border-t bg-gray-50 flex justify-between items-center">
+                <div id="modalSearchInfo" class="text-sm text-gray-600"></div>
+                <div class="space-x-3">
+                    <button onclick="closeSearchModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">
+                        取消
+                    </button>
+                    <button id="viewAllResultsBtn" onclick="goToSearchPage()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        查看全部结果
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 移动端搜索框 -->
+    <div id="mobileSearchBox" class="hidden md:hidden bg-white border-t px-4 py-3">
+        <div class="flex items-center bg-gray-100 rounded-lg px-3 py-2">
+            <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <input type="text" placeholder="搜索文章..." class="bg-transparent outline-none text-sm flex-1" id="mobileSearchInput">
+            <button id="mobileSearchClose" class="ml-2 p-1 rounded hover:bg-gray-200">
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
     </header>
 
     <div class="flex pt-16">
         <!-- 侧边栏 - 固定定位，独立滚动 -->
-        <aside id="sidebar" class="sidebar-transition bg-white shadow-lg sidebar-fixed w-64 transform -translate-x-full lg:translate-x-0">
+        <aside id="sidebar" class="sidebar-transition bg-white shadow-lg sidebar-fixed w-64 -translate-x-full lg:translate-x-0">
             <div class="p-4">
 
                 
                 <nav class="space-y-2">
+                    <!-- 桌面端折叠按钮 -->
+                    <button id="sidebarCollapse" class="hidden lg:block absolute -right-3 top-6 w-6 h-6 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg">
+                        <svg id="collapseIcon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
 
                     <!-- 分类菜单 -->
                     <div class="pt-4 border-t category-section">
@@ -267,8 +456,11 @@
                             {% endfor %}
                             
                             <div class="category-item" data-category="{{ category_name }}">
-                                <a href="/categories/{{ category_name | slugify }}/" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm category-link" data-category="{{ category_name }}">
-                                    <span class="w-2 h-2 category-dot rounded-full" style="background-color: {{category_name | hash | slice: 0, 6 | prepend: '#'}};"></span>
+                                <a href="#category-{{ category_name }}" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm category-link" data-category="{{ category_name }}" onclick="scrollToCategory('category-{{ category_name }}'); return false;">
+                                    {% assign colors = "#ef4444,#f97316,#eab308,#22c55e,#06b6d4,#3b82f6,#8b5cf6,#ec4899" | split: ',' %}
+                                    {% assign color_index = forloop.index0 | modulo: colors.size %}
+                                    {% assign category_color = colors[color_index] %}
+                                    <span class="category-dot w-2 h-2 rounded-full" style="background-color: {{ category_color }}; box-shadow: 0 0 6px {{ category_color }}40;"></span>
                                     <span class="nav-text flex-1">{{ category_name }} ({{ posts.size }})</span>
                                     {% if has_subcategories %}
                                     <svg class="w-4 h-4 category-chevron transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -281,17 +473,28 @@
                                 <div class="subcategory-list hidden ml-6 mt-1 space-y-1">
                                     {% assign subcategories = posts | map: 'categories' | uniq | sort %}
                                     {% for subcat in subcategories %}
-                                        {% unless subcat == category_name %}
-                                        <a href="/categories/{{ subcat | slugify }}/" class="nav-item flex items-center space-x-2 px-3 py-1 rounded-lg hover:bg-gray-100 transition-colors text-xs text-gray-600">
-                                            <span class="w-1.5 h-1.5 rounded-full" style="background-color: {{ subcat | hash | slice: 0, 6 | prepend: '#' }};"></span>
-                                            <span>{{ subcat }}</span>
-                                        </a>
-                                        {% endunless %}
-                                    {% endfor %}
+                                      {% assign subcat_colors = "#f87171,#fb923c,#fbbf24,#4ade80,#22d3ee,#60a5fa,#a78bfa,#f472b6" | split: ',' %}
+                                      {% assign subcat_color_index = forloop.index0 | modulo: subcat_colors.size %}
+                                      {% assign subcat_color = subcat_colors[subcat_color_index] %}
+                                      <li class="subcategory-item">
+                                          <a href="#category-{{ subcat }}" class="nav-item flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm category-link" data-category="{{ subcat }}" onclick="scrollToCategory('category-{{ subcat }}'); return false;">
+                                              <span class="w-2 h-2 rounded-full ml-6" style="background-color: {{ subcat_color }}; box-shadow: 0 0 4px {{ subcat_color }}40;"></span>
+                                              <span class="nav-text flex-1">{{ subcat }}</span>
+                                          </a>
+                                      </li>
+                                  {% endfor %}
                                 </div>
                                 {% endif %}
                             </div>
                             {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- 标签云 -->
+                    <div class="pt-4 border-t">
+                        <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">标签云</h3>
+                        <div id="tagCloud" class="flex flex-wrap">
+                            <!-- 标签将通过JavaScript动态生成 -->
                         </div>
                     </div>
                 </nav>
@@ -331,6 +534,7 @@
             // 移动端：显示/隐藏侧边栏
             if (window.innerWidth < 1024) {
                 sidebar.classList.toggle('-translate-x-full');
+                sidebar.classList.toggle('mobile-open');
                 sidebarOverlay.classList.toggle('hidden');
             } else {
                 // 桌面端：折叠/展开侧边栏
@@ -351,22 +555,41 @@
         const sidebarCollapse = document.getElementById('sidebarCollapse');
         const collapseIcon = document.getElementById('collapseIcon');
 
-        sidebarCollapse.addEventListener('click', (e) => {
-            e.stopPropagation();
-            sidebar.classList.toggle('sidebar-collapsed');
-            mainContent.classList.toggle('main-content-collapsed');
-            mainContent.classList.toggle('main-content-with-sidebar');
-            
-            if (sidebar.classList.contains('sidebar-collapsed')) {
-                collapseIcon.style.transform = 'rotate(180deg)';
-            } else {
-                collapseIcon.style.transform = 'rotate(0deg)';
-            }
-        });
+        if (sidebarCollapse) {
+            sidebarCollapse.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sidebar.classList.toggle('sidebar-collapsed');
+                mainContent.classList.toggle('main-content-collapsed');
+                mainContent.classList.toggle('main-content-with-sidebar');
+                
+                if (sidebar.classList.contains('sidebar-collapsed')) {
+                    collapseIcon.style.transform = 'rotate(180deg)';
+                } else {
+                    collapseIcon.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
 
         sidebarOverlay.addEventListener('click', () => {
             sidebar.classList.add('-translate-x-full');
+            sidebar.classList.remove('mobile-open');
             sidebarOverlay.classList.add('hidden');
+        });
+
+        // 响应式处理
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                // 桌面端时重置移动端状态
+                sidebar.classList.remove('-translate-x-full', 'mobile-open');
+                sidebarOverlay.classList.add('hidden');
+            } else {
+                // 移动端时重置桌面端状态
+                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('sidebar-collapsed', 'mobile-open');
+                mainContent.classList.remove('main-content-collapsed');
+                mainContent.classList.add('main-content-with-sidebar');
+                sidebarOverlay.classList.add('hidden');
+            }
         });
 
         // 分类展开/收起功能
@@ -421,6 +644,53 @@
             document.body.style.overflow = 'auto';
         }
 
+        // 滚动到指定分类
+        window.scrollToCategory = function(categoryId) {
+            const element = document.getElementById(categoryId);
+            
+            if (element) {
+                // 如果在首页，先清除标签筛选
+                if (typeof clearTagFilter === 'function') {
+                    clearTagFilter();
+                }
+                
+                // 在首页或包含分类区块的页面，执行滚动和高亮
+                // 清除之前的高亮
+                document.querySelectorAll('.category-highlight').forEach(el => {
+                    el.classList.remove('category-highlight');
+                });
+                
+                // 清除之前菜单项的激活状态
+                document.querySelectorAll('.category-item a').forEach(el => {
+                    el.classList.remove('bg-indigo-100', 'text-indigo-700', 'font-semibold');
+                });
+                
+                // 高亮当前菜单项
+                const currentMenuItem = document.querySelector(`a[href="#${categoryId}"]`);
+                if (currentMenuItem) {
+                    currentMenuItem.classList.add('bg-indigo-100', 'text-indigo-700', 'font-semibold');
+                }
+                
+                // 滚动到目标元素
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                // 添加高亮效果
+                element.classList.add('category-highlight');
+                
+                // 3秒后移除高亮
+                setTimeout(() => {
+                    element.classList.remove('category-highlight');
+                }, 3000);
+            } else {
+                // 在文章页面或其他没有分类区块的页面，返回首页并滚动到对应分类
+                // 构建首页URL，带hash锚点
+                const homeUrlWithHash = `/#${categoryId}`;
+                
+                // 跳转到首页并滚动到指定分类
+                window.location.href = homeUrlWithHash;
+            }
+        };
+
         // ESC键关闭灯箱
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
@@ -428,15 +698,361 @@
             }
         });
 
-        // 搜索功能
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const query = this.value.trim();
-                if (query) {
-                    window.location.href = `/search/?q=${encodeURIComponent(query)}`;
-                }
+        // 搜索弹窗功能 - 重构版本
+        let currentSearchQuery = '';
+        let searchCache = new Map(); // 搜索结果缓存
+        let searchTimeout = null;
+
+        // 打开搜索弹窗
+        function openSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('modalSearchInput').focus();
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭搜索弹窗
+        function closeSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.getElementById('modalSearchInput').value = '';
+            resetModalSearchState();
+            document.body.style.overflow = 'auto';
+        }
+
+        // 重置弹窗搜索状态
+        function resetModalSearchState() {
+            document.getElementById('modalSearchResults').innerHTML = getDefaultSearchState();
+            document.getElementById('modalSearchInfo').innerHTML = '';
+            document.getElementById('viewAllResultsBtn').disabled = true;
+            currentSearchQuery = '';
+        }
+
+        // 获取默认搜索状态
+        function getDefaultSearchState() {
+            return `
+                <div class="text-center py-8 text-gray-500">
+                    <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <p>输入关键词开始搜索</p>
+                </div>
+            `;
+        }
+
+        // 跳转到搜索页面
+        function goToSearchPage() {
+            if (currentSearchQuery) {
+                window.location.href = `/search/?q=${encodeURIComponent(currentSearchQuery)}`;
             }
+        }
+
+        // 实时搜索处理函数
+        function handleRealTimeSearch() {
+            const query = document.getElementById('modalSearchInput').value.trim();
+            currentSearchQuery = query;
+            
+            // 清除之前的搜索定时器
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+            
+            // 立即显示加载状态（如果查询不为空）
+            if (query.length > 0) {
+                showLoadingState();
+            }
+            
+            // 使用较短的延迟以提供更快的响应
+            searchTimeout = setTimeout(() => {
+                performOptimizedSearch(query);
+            }, 150); // 减少延迟到150ms
+        }
+
+        // 显示加载状态
+        function showLoadingState() {
+            document.getElementById('modalSearchResults').innerHTML = `
+                <div class="text-center py-8 text-gray-500">
+                    <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mb-3"></div>
+                    <p>搜索中...</p>
+                </div>
+            `;
+        }
+
+        // 优化的搜索函数
+        function performOptimizedSearch(query) {
+            if (query.length === 0) {
+                resetModalSearchState();
+                return;
+            }
+            
+            // 检查缓存
+            if (searchCache.has(query)) {
+                displaySearchResults(searchCache.get(query), query);
+                return;
+            }
+            
+            // 执行搜索
+            const results = executeSearch(query);
+            
+            // 缓存结果
+            searchCache.set(query, results);
+            
+            // 显示结果
+            displaySearchResults(results, query);
+        }
+
+        // 执行实际的搜索逻辑
+        function executeSearch(query) {
+            const searchLower = query.toLowerCase();
+            
+            // 搜索数据（这里应该从实际的博客数据获取）
+            const articles = getBlogArticles();
+            
+            // 执行搜索匹配
+            return articles.filter(article => {
+                const searchText = [
+                    article.title,
+                    article.content,
+                    article.tags.join(' '),
+                    article.category
+                ].join(' ').toLowerCase();
+                
+                return searchText.includes(searchLower);
+            }).sort((a, b) => {
+                // 按相关性和日期排序
+                const aScore = calculateRelevanceScore(a, searchLower);
+                const bScore = calculateRelevanceScore(b, searchLower);
+                return bScore - aScore;
+            });
+        }
+
+        // 获取博客文章数据（使用Jekyll实际数据）
+        function getBlogArticles() {
+            return [
+                {% for post in site.posts %}
+                {
+                    url: '{{ post.url | relative_url }}',
+                    title: '{{ post.title | escape }}',
+                    content: '{{ post.content | strip_html | strip_newlines | escape }}',
+                    date: '{{ post.date | date: "%Y-%m-%d" }}',
+                    category: '{{ post.categories[0] | default: "未分类" }}',
+                    tags: [{% for tag in post.tags %}'{{ tag }}'{% unless forloop.last %},{% endunless %}{% endfor %}],
+                    excerpt: '{{ post.excerpt | strip_html | strip_newlines | escape }}'
+                }{% unless forloop.last %},{% endunless %}
+                {% endfor %}
+            ];
+        }
+
+        // 计算相关性得分
+        function calculateRelevanceScore(article, query) {
+            let score = 0;
+            
+            // 标题匹配权重最高
+            if (article.title.toLowerCase().includes(query)) {
+                score += 10;
+            }
+            
+            // 标签匹配
+            article.tags.forEach(tag => {
+                if (tag.toLowerCase().includes(query)) {
+                    score += 5;
+                }
+            });
+            
+            // 分类匹配
+            if (article.category.toLowerCase().includes(query)) {
+                score += 3;
+            }
+            
+            // 内容匹配
+            const contentMatches = (article.content.toLowerCase().match(new RegExp(query, 'g')) || []).length;
+            score += contentMatches;
+            
+            // 日期权重（越新的文章权重越高）
+            const dateScore = new Date(article.date).getTime() / 1000000000000;
+            score += dateScore;
+            
+            return score;
+        }
+
+        // 显示搜索结果
+        function displaySearchResults(results, query) {
+            const resultsContainer = document.getElementById('modalSearchResults');
+            const infoContainer = document.getElementById('modalSearchInfo');
+            const viewAllBtn = document.getElementById('viewAllResultsBtn');
+            
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p>未找到相关文章</p>
+                    </div>
+                `;
+                infoContainer.innerHTML = `未找到包含 "<span class="font-semibold">${highlightText(query, query)}</span>" 的文章`;
+                viewAllBtn.disabled = true;
+            } else {
+                // 限制显示前5个结果
+                const limitedResults = results.slice(0, 5);
+                
+                resultsContainer.innerHTML = limitedResults.map(article => `
+                    <div class="border-b last:border-b-0 pb-4 mb-4 last:pb-0 last:mb-0 hover:bg-gray-50 -mx-2 px-2 py-2 rounded transition-colors">
+                        <h3 class="font-semibold text-lg mb-2 hover:text-blue-600 cursor-pointer" onclick="window.location.href='${article.url}'">
+                            ${highlightText(article.title, query)}
+                        </h3>
+                        <p class="text-gray-600 text-sm mb-2 line-clamp-2">${highlightText(getContentSnippet(article.content, query), query)}</p>
+                        <div class="flex items-center text-xs text-gray-500 space-x-2 flex-wrap">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded">${article.category}</span>
+                            ${article.tags.map(tag => `<span class="bg-gray-100 text-gray-600 px-2 py-1 rounded">${highlightText(tag, query)}</span>`).join('')}
+                            <span class="text-gray-400">${article.date}</span>
+                        </div>
+                    </div>
+                `).join('');
+                
+                infoContainer.innerHTML = `找到 <span class="font-semibold text-blue-600">${results.length}</span> 篇相关文章${results.length > 5 ? ` (显示前5篇)` : ''}`;
+                viewAllBtn.disabled = false;
+            }
+        }
+
+        // 获取内容片段（包含关键词的部分）
+        function getContentSnippet(content, query, maxLength = 120) {
+            const queryIndex = content.toLowerCase().indexOf(query.toLowerCase());
+            if (queryIndex === -1) {
+                return content.substring(0, maxLength) + (content.length > maxLength ? '...' : '');
+            }
+            
+            const start = Math.max(0, queryIndex - 30);
+            const end = Math.min(content.length, queryIndex + query.length + 90);
+            
+            let snippet = content.substring(start, end);
+            if (start > 0) snippet = '...' + snippet;
+            if (end < content.length) snippet = snippet + '...';
+            
+            return snippet;
+        }
+
+        // 高亮文本
+        function highlightText(text, query) {
+            if (!query) return text;
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<mark class="bg-yellow-200 px-1 rounded text-yellow-900">$1</mark>');
+        }
+        // 搜索弹窗事件监听
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalSearchInput = document.getElementById('modalSearchInput');
+            if (modalSearchInput) {
+                modalSearchInput.addEventListener('input', handleRealTimeSearch);
+            }
+            
+            // ESC键关闭弹窗
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('searchModal');
+                    if (!modal.classList.contains('hidden')) {
+                        closeSearchModal();
+                    }
+                }
+            });
+            
+            // 点击弹窗外部关闭
+            document.getElementById('searchModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeSearchModal();
+                }
+            });
         });
+
+        // 防抖函数，避免频繁搜索
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 实时搜索建议功能
+        function showSearchSuggestions(query) {
+            // 这里可以添加搜索建议的逻辑
+            // 暂时简化处理，只在实际搜索页面才启用实时搜索
+        }
+
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            // 回车搜索
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (query) {
+                        window.location.href = `/search/?q=${encodeURIComponent(query)}`;
+                    }
+                }
+            });
+
+            // 实时搜索监听（仅在搜索页面启用完整实时搜索）
+            if (window.location.pathname.includes('/search')) {
+                searchInput.addEventListener('input', debounce(function() {
+                    const query = this.value.trim();
+                    // 输入一个字就开始搜索
+                    if (typeof performRealTimeSearch === 'function') {
+                        performRealTimeSearch();
+                    }
+                }, 300));
+            } else {
+                // 在其他页面只显示搜索建议
+                searchInput.addEventListener('input', debounce(function() {
+                    showSearchSuggestions(this.value.trim());
+                }, 300));
+            }
+        }
+
+        // 移动端搜索功能
+        const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+        const mobileSearchBox = document.getElementById('mobileSearchBox');
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        const mobileSearchClose = document.getElementById('mobileSearchClose');
+
+        if (mobileSearchBtn && mobileSearchBox) {
+            // 打开移动端搜索框
+            mobileSearchBtn.addEventListener('click', () => {
+                mobileSearchBox.classList.toggle('hidden');
+                if (!mobileSearchBox.classList.contains('hidden')) {
+                    mobileSearchInput.focus();
+                }
+            });
+
+            // 关闭移动端搜索框
+            mobileSearchClose.addEventListener('click', () => {
+                mobileSearchBox.classList.add('hidden');
+                mobileSearchInput.value = '';
+            });
+
+            // 移动端搜索框回车搜索
+            mobileSearchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const query = this.value.trim();
+                    if (query) {
+                        window.location.href = `/search/?q=${encodeURIComponent(query)}`;
+                    }
+                }
+            });
+
+            // ESC键关闭移动端搜索框
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !mobileSearchBox.classList.contains('hidden')) {
+                    mobileSearchBox.classList.add('hidden');
+                    mobileSearchInput.value = '';
+                }
+            });
+        }
 
         // 响应式处理
         window.addEventListener('resize', function() {
@@ -444,6 +1060,113 @@
                 sidebar.classList.remove('-translate-x-full');
                 sidebarOverlay.classList.add('hidden');
             }
+        });
+
+        // 标签云功能
+        function initTagCloud() {
+            const tagCloudContainer = document.getElementById('tagCloud');
+            if (!tagCloudContainer) return;
+            
+            // 获取所有文章数据
+            const articles = getBlogArticles();
+            
+            // 统计标签
+            const postsByTag = {};
+            articles.forEach(article => {
+                if (article.tags) {
+                    article.tags.forEach(tag => {
+                        if (!postsByTag[tag]) {
+                            postsByTag[tag] = [];
+                        }
+                        postsByTag[tag].push(article);
+                    });
+                }
+            });
+            
+            // 按文章数量排序标签
+            const sortedTags = Object.keys(postsByTag).sort((a, b) => postsByTag[b].length - postsByTag[a].length);
+            
+            // 生成标签气泡
+            tagCloudContainer.innerHTML = sortedTags.map(tag => {
+                const postCount = postsByTag[tag].length;
+                const size = Math.min(Math.max(postCount * 1.5 + 10, 10), 16); // 根据文章数量调整字体大小
+                const gradient = getRandomGradient();
+                
+                return `
+                    <span class="tag-bubble" 
+                          style="background: ${gradient}; font-size: ${size}px;" 
+                          data-tag="${tag}"
+                          onclick="filterByTag('${tag}')">
+                        ${tag} (${postCount})
+                    </span>
+                `;
+            }).join('');
+        }
+
+        // 根据标签筛选文章（侧边栏版本）
+        window.sidebarFilterByTag = function(tag) {
+            const articles = getBlogArticles();
+            const posts = articles.filter(article => article.tags && article.tags.includes(tag));
+            
+            // 更新标签状态
+            document.querySelectorAll('.tag-bubble').forEach(bubble => {
+                bubble.classList.remove('active');
+            });
+            const currentTag = document.querySelector(`[data-tag="${tag}"]`);
+            if (currentTag) {
+                currentTag.classList.add('active');
+            }
+            
+            // 判断当前页面类型
+            const currentPath = window.location.pathname;
+            
+            // 在文章页面时，返回首页并滚动到对应位置
+            if (currentPath.includes('/20') && currentPath.includes('.html')) {
+                // 构建首页URL，使用标签作为hash
+                const homeUrlWithHash = `/#tag-${tag}`;
+                
+                // 跳转到首页
+                window.location.href = homeUrlWithHash;
+            } else if (currentPath === '/' || currentPath === '/index.html') {
+                // 在首页时，调用首页的filterByTag函数
+                if (typeof window.filterByTag === 'function' && window.filterByTag.toString().includes('tagPostsContainer')) {
+                    // 如果首页的filterByTag函数已加载，直接调用
+                    window.filterByTag(tag);
+                } else {
+                    // 如果首页函数未加载，使用hash方式触发
+                    window.location.hash = `tag-${tag}`;
+                    // 触发hashchange事件
+                    window.dispatchEvent(new HashChangeEvent('hashchange'));
+                }
+            } else {
+                // 在其他页面时，跳转到搜索页面显示结果
+                window.location.href = `/search/?q=${encodeURIComponent(tag)}&type=tag`;
+            }
+        };
+
+        // 为了兼容性，保留原来的filterByTag函数名，但重定向到sidebarFilterByTag
+        window.filterByTag = window.sidebarFilterByTag;
+
+        // 生成随机渐变色
+        function getRandomGradient() {
+            const gradients = [
+                'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
+                'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+                'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+                'linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%)',
+                'linear-gradient(135deg, #fdcbf1 0%, #e6dee9 100%)'
+            ];
+            return gradients[Math.floor(Math.random() * gradients.length)];
+        }
+
+        // 初始化标签云
+        document.addEventListener('DOMContentLoaded', function() {
+            initTagCloud();
         });
     </script>
 </body>
