@@ -21,6 +21,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
       
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
@@ -31,8 +33,23 @@ jobs:
     - name: Show Ruby version
       run: ruby --version && bundler --version
       
+    - name: Show working directory and list files
+      run: |
+        echo "Current working directory: $(pwd)"
+        echo "Directory contents:"
+        ls -la
+        echo "Checking specifically for Gemfile:"
+        if [ -f "Gemfile" ]; then
+          echo "Gemfile found!"
+          ls -la Gemfile
+        else
+          echo "Gemfile NOT found!"
+          echo "Searching for Gemfile in subdirectories:"
+          find . -name "Gemfile" -type f 2>/dev/null || echo "No Gemfile found anywhere"
+        fi
+      
     - name: Show Gemfile content
-      run: cat Gemfile
+      run: cat ./Gemfile || echo "Gemfile not found in current directory"
       
     - name: Install dependencies
       run: bundle install --verbose
@@ -52,7 +69,11 @@ jobs:
       run: ls -la _site/
       
     - name: Check specific post file
-      run: ls -la _site/*随笔* || echo "No Chinese category folder found"
+      run: |
+        echo "Checking for Chinese category folders..."
+        find _site -name "*随笔*" -type d || echo "No Chinese category folder found"
+        echo "Checking for generated HTML files..."
+        find _site -name "*.html" | head -10
       
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
