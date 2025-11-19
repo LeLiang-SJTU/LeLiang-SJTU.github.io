@@ -13,6 +13,20 @@ plugins:
   - jekyll-sitemap
   - jekyll-seo-tag
   - jekyll-paginate
+  - github-pages
+
+# GitHub Pages specific settings
+# Use the same version as GitHub Pages
+# https://pages.github.com/versions/
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+# Safe mode for GitHub Pages
+safe: true
 
 # Exclude from processing
 exclude:
@@ -24,6 +38,15 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
   - README.md
+  - .gitignore
+  - .nojekyll
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/
+  - Rakefile
+  - package.json
+  - package-lock.json
+  - yarn.lock
 
 # Collections
 

@@ -1,14 +1,15 @@
 source "https://rubygems.org"
 
-# Add csv gem for Ruby 3.4+ compatibility
-gem "csv"
+# GitHub Pages compatible gems
+gem "github-pages", group: :jekyll_plugins
 
-gem "jekyll", "~> 4.4.0"
-gem "jekyll-feed", "~> 0.12"
-gem "jekyll-sitemap"
-gem "jekyll-seo-tag"
-gem "jekyll-paginate"
-gem "minima"
+# Additional Jekyll plugins
+group :jekyll_plugins do
+  gem "jekyll-feed", "~> 0.12"
+  gem "jekyll-sitemap"
+  gem "jekyll-seo-tag"
+  gem "jekyll-paginate"
+end
 
 # Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data gem
 # and associated library.
@@ -23,3 +24,6 @@ gem "wdm", "~> 0.2.0", :platforms => [:mingw, :x64_mingw, :mswin]
 # Lock `http_parser.rb` gem to `v0.6.x` on JRuby builds since newer versions of the gem
 # do not have a Java counterpart.
 gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
+
+# Add csv gem for Ruby 3.4+ compatibility
+gem "csv"
