@@ -6,7 +6,14 @@ gem "csv"
 # Add bigdecimal for Ruby 3.4+ compatibility  
 gem "bigdecimal"
 
-gem "jekyll", "~> 4.4.0"
+# Add logger and base64 for Ruby 3.4+ compatibility
+gem "logger"
+gem "base64"
+
+# Jekyll core
+gem "jekyll", "~> 4.3.0"
+
+# Jekyll plugins
 gem "jekyll-feed", "~> 0.12"
 gem "jekyll-sitemap"
 gem "jekyll-seo-tag"
