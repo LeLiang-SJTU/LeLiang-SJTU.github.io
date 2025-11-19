@@ -28,14 +28,32 @@ jobs:
         ruby-version: '3.1'
         bundler-cache: true
         
+    - name: Show Ruby version
+      run: ruby --version && bundler --version
+      
+    - name: Show Gemfile content
+      run: cat Gemfile
+      
     - name: Install dependencies
-      run: bundle install
+      run: bundle install --verbose
+      
+    - name: Show Jekyll version
+      run: bundle exec jekyll --version
+      
+    - name: Show Jekyll configuration
+      run: bundle exec jekyll doctor
       
     - name: Build site
-      run: bundle exec jekyll build
+      run: bundle exec jekyll build --verbose --trace
       env:
         JEKYLL_ENV: production
         
+    - name: List generated files
+      run: ls -la _site/
+      
+    - name: Check specific post file
+      run: ls -la _site/*随笔* || echo "No Chinese category folder found"
+      
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
