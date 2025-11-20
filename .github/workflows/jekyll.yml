@@ -2,9 +2,8 @@ name: Lo Build and Deploy Jekyll Site
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ defalt ]
+
 
 permissions:
   contents: read
