@@ -1,13 +1,18 @@
 # Site settings
 title: Lo
-description: 前端开发者 | 摄影爱好者 | 终身学习者
+description: Ai开发者 | 摄影爱好者 | 终身学习者
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://LeLiang-SJTU.github.io"  # the base hostname & protocol for your site, e.g. http://example.com
+
+# Site metadata
+author: LoLo
+email: your-email@example.com
+lang: zh-CN
+timezone: Asia/Shanghai
 
 # Build settings
 markdown: kramdown
 highlighter: rouge
-theme: minima
 
 # Kramdown settings for consistent Markdown rendering
 kramdown:
@@ -42,8 +47,6 @@ exclude:
   - vendor/ruby/
   - README.md
 
-# Collections
-
 
 # Defaults
 defaults:
@@ -64,11 +67,7 @@ sass:
   style: compressed
   sass_dir: _sass
 
-# Site metadata
-author: LoLo
-email: your-email@example.com
-lang: zh-CN
-timezone: Asia/Shanghai
+
 
 # Social links (optional)
 github_username: LeLiang-SJTU
