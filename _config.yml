@@ -8,6 +8,23 @@ url: "https://LeLiang-SJTU.github.io"  # the base hostname & protocol for your s
 markdown: kramdown
 highlighter: rouge
 theme: minima
+
+# Kramdown settings for consistent Markdown rendering
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+    span:
+      line_numbers: false
+  hard_wrap: false
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+  enable_coderay: false
+
 plugins:
   - jekyll-feed
   - jekyll-sitemap
